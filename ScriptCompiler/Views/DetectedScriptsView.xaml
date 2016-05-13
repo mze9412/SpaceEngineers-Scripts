@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="mze9412.ScriptCompiler.Views.DetectedScriptsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:p="clr-namespace:mze9412.ScriptCompiler.Properties"
+             xmlns:views1="clr-namespace:mze9412.ScriptCompiler.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+            <Button Margin="5" Command="{Binding RefreshScriptsCommand}" Width="120" Content="{x:Static p:Resources.DetectedScripts_RefreshScripts}" />
+            <Button Margin="5" Command="{Binding CompileAllCommand}" Width="120" Content="{x:Static p:Resources.DetectedScripts_CompileAll}" />
+        </StackPanel>
+        <Label Grid.Row="1" Grid.Column="0" Content="{x:Static p:Resources.DetectedScripts_Title}" FontWeight="Bold" />
+        <ItemsControl Grid.Row="2" Grid.Column="0" ItemsSource="{Binding DetectedScripts}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <views1:DetectedScriptControl Margin="5" Script="{Binding .}" CompileCommand="{Binding DataContext.CompileCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views1:DetectedScriptsView}}}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+    </Grid>
+</UserControl>
