@@ -89,6 +89,10 @@ namespace mze9412.ScriptCompiler.ViewModels
         private void RefreshScripts(object argument)
         {
             DetectedScripts.Clear();
+            if (string.IsNullOrWhiteSpace(settingsViewModel.ScriptCodeDirectory))
+            {
+                return;
+            }
 
             var directory = new DirectoryInfo(settingsViewModel.ScriptCodeDirectory);
             if (directory.Exists)

@@ -10,7 +10,7 @@ namespace mze9412.SEScripts.InventoryManager
         public InventoryManagerProgram() //#replace(InventoryManagerProgram,Program)
         {
             TimeSinceLastRun = new TimeSpan();
-            Manager = new mze9412.SEScripts.InventoryManager.InventoryManager(this);
+            Manager = new InventoryManager(this);
 
             //configure script
             InventoryManagerConfig.BalanceRefineries        = true;
@@ -30,7 +30,7 @@ namespace mze9412.SEScripts.InventoryManager
         /// </summary>
         private TimeSpan TimeSinceLastRun { get; set; }
 
-        private mze9412.SEScripts.InventoryManager.InventoryManager Manager { get; set; }
+        private InventoryManager Manager { get; set; }
 
         #endregion
 
@@ -54,11 +54,13 @@ namespace mze9412.SEScripts.InventoryManager
         }
 
         //#include(InventoryManagerConfig.cs,false)
-        //#include(Inventory.cs,false)
-        //#include(InventoryType.cs,false)
-        //#include(InventoryManager.cs,false)
+        //#include(Actions/InventoryManagerAction.cs,false)
+        //#include(Actions/CollectFromConnectedGridsAction.cs,false)
+        //#include(Actions/CollectItemsAction.cs,false)
+        //#include(Actions/RefineryBalanceAction.cs,false)
         //#include(../Libraries/LCDHelper.cs,false)
         //#include(../Libraries/ItemIdHelper.cs,false)
+        //#include(InventoryManager.cs,false)
 
         /**End copy here**/
     }

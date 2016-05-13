@@ -61,12 +61,13 @@
     <Compile Include="ActionPrinter\ActionPrinterProgram.cs" />
     <Compile Include="CargoState\CargoStateProgram.cs" />
     <Compile Include="DistanceWarning\DistanceWarningProgram.cs" />
-    <Compile Include="InventoryManager\Inventory.cs" />
+    <Compile Include="InventoryManager\Actions\CollectFromConnectedGridsAction.cs" />
+    <Compile Include="InventoryManager\Actions\CollectItemsAction.cs" />
+    <Compile Include="InventoryManager\Actions\RefineryBalanceAction.cs" />
     <Compile Include="InventoryManager\InventoryManager.cs" />
-    <Compile Include="InventoryManager\InventoryManagerAction.cs" />
+    <Compile Include="InventoryManager\Actions\InventoryManagerAction.cs" />
     <Compile Include="InventoryManager\InventoryManagerConfig.cs" />
     <Compile Include="InventoryManager\InventoryManagerProgram.cs" />
-    <Compile Include="InventoryManager\InventoryType.cs" />
     <Compile Include="ItemId\ItemIdProgram.cs" />
     <Compile Include="Libraries\ItemIdHelper.cs" />
     <Compile Include="Libraries\LCDHelper.cs" />

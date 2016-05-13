@@ -7,6 +7,11 @@ namespace mze9412.SEScripts.Libraries
 
     public static class ItemIdHelper
     {
+        public const int TypeOre = 0;
+        public const int TypeIngot = 1;
+        public const int TypeComponent = 2;
+        public const int TypeMisc = 3;
+
         private static readonly List<ItemDefinition> ItemDefinitions;
 
         static ItemIdHelper()
@@ -95,6 +100,20 @@ namespace mze9412.SEScripts.Libraries
         public static bool IsMisc(string typeId)
         {
             return !IsOre(typeId) && !IsIngot(typeId) && !IsComponent(typeId);
+        }
+
+        /// <summary>
+        /// Returns item type (int based helper)
+        /// </summary>
+        /// <param name="typeId"></param>
+        /// <returns></returns>
+        public static int GetItemType(string typeId)
+        {
+            if (IsOre(typeId)) return TypeOre;
+            if (IsIngot(typeId)) return TypeIngot;
+            if (IsComponent(typeId)) return TypeComponent;
+
+            return TypeMisc;
         }
 
         #region Item Definition class

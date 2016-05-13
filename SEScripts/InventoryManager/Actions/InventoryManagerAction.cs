@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using Sandbox.ModAPI.Ingame;
 using VRage.Game.ModAPI.Ingame;
 
-namespace mze9412.SEScripts.InventoryManager
+namespace mze9412.SEScripts.InventoryManager.Actions
 {
+    /**Begin copy here**/
+
     /// <summary>
     /// Base class for all inventory management actions
     /// </summary>
@@ -20,7 +23,7 @@ namespace mze9412.SEScripts.InventoryManager
             }
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentNullException("gridProgram");
+                throw new ArgumentNullException("name");
             }
 
             GridProgram = gridProgram;
@@ -45,19 +48,19 @@ namespace mze9412.SEScripts.InventoryManager
         /// Public run method
         /// </summary>
         /// <param name="argument"></param>
-        public void Run(string argument)
+        public bool Run(string argument)
         {
-            RunCore(argument);
+            return RunCore(argument);
         }
 
         /// <summary>
         /// Internal run method
         /// </summary>
         /// <param name="argument"></param>
-        protected abstract void RunCore(string argument);
+        protected abstract bool RunCore(string argument);
 
         #region Helpers
-
+        
         /// <summary>
         /// True of instruction count is still low enough
         /// </summary>
@@ -65,11 +68,58 @@ namespace mze9412.SEScripts.InventoryManager
         {
             get
             {
-                return (double)GridProgram.Runtime.CurrentInstructionCount/GridProgram.Runtime.CurrentInstructionCount < 0.5;
+                var val = (double)GridProgram.Runtime.CurrentInstructionCount/GridProgram.Runtime.MaxInstructionCount;
+                return val < 0.5;
             }
         }
 
         #region Transfer items helper
+
+        /// <summary>
+        /// Tries to get a target block for given type
+        /// </summary>
+        /// <param name="sourceInventory"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        protected IMyTerminalBlock GetTargetForItem(IMyInventory sourceInventory, int type)
+        {
+            //determine tag
+            var tag = string.Empty;
+            switch (type)
+            {
+                case 0:
+                    tag = InventoryManagerConfig.OreContainerTag;
+                    break;
+                case 1:
+                    tag = InventoryManagerConfig.IngotsContainerTag;
+                    break;
+                case 2:
+                    tag = InventoryManagerConfig.ComponentsContainerTag;
+                    break;
+                case 3:
+                    tag = InventoryManagerConfig.MiscContainerTag;
+                    break;
+            }
+
+            //cancel if not found
+            if (string.IsNullOrWhiteSpace(tag))
+            {
+                return null;
+            }
+
+            //get possible targets, must have 10% volume left and be connected to source inventory
+            var targets = new List<IMyTerminalBlock>(25);
+            GridProgram.GridTerminalSystem.GetBlocksOfType<IMyTerminalBlock>(targets, x => x.CubeGrid == GridProgram.Me.CubeGrid && x is IMyInventoryOwner && x.CustomName.Contains(tag) && ((double)x.GetInventory(0).CurrentVolume / (double)x.GetInventory(0).MaxVolume < 0.9) && x.GetInventory(0).IsConnectedTo(sourceInventory));
+
+            //return first target
+            if (targets.Count > 0)
+            {
+                return targets[0];
+            }
+
+            //nothing found
+            return null;
+        }
 
         /// <summary>
         /// Transfers given item from source to target inventory. Transfers all if no amount given
@@ -128,5 +178,7 @@ namespace mze9412.SEScripts.InventoryManager
         #endregion
 
         #endregion
+
+        /**End copy here**/
     }
 }

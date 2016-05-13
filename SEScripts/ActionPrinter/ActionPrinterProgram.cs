@@ -11,6 +11,7 @@ namespace mze9412.SEScripts.ActionPrinter
         public void Main(string argument)
         {
             var block = GridTerminalSystem.GetBlockWithName(argument);
+
             if (block == null)
             {
                 Echo("Block with name \'" + argument + "\' does not exist.");
