@@ -50,14 +50,32 @@
     <Reference Include="VRage.Game">
       <HintPath>C:\Games\SteamApps\SteamApps\common\SpaceEngineers\Bin64\VRage.Game.dll</HintPath>
     </Reference>
+    <Reference Include="VRage.Library">
+      <HintPath>C:\Games\SteamApps\SteamApps\common\SpaceEngineers\Bin64\VRage.Library.dll</HintPath>
+    </Reference>
     <Reference Include="VRage.Math">
       <HintPath>C:\Games\SteamApps\SteamApps\common\SpaceEngineers\Bin64\VRage.Math.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionPrinter\ActionPrinterProgram.cs" />
+    <Compile Include="CargoState\CargoStateProgram.cs" />
+    <Compile Include="DistanceWarning\DistanceWarningProgram.cs" />
+    <Compile Include="InventoryManager\Inventory.cs" />
+    <Compile Include="InventoryManager\InventoryManager.cs" />
+    <Compile Include="InventoryManager\InventoryManagerAction.cs" />
+    <Compile Include="InventoryManager\InventoryManagerConfig.cs" />
+    <Compile Include="InventoryManager\InventoryManagerProgram.cs" />
+    <Compile Include="InventoryManager\InventoryType.cs" />
+    <Compile Include="ItemId\ItemIdProgram.cs" />
     <Compile Include="Libraries\ItemIdHelper.cs" />
     <Compile Include="Libraries\LCDHelper.cs" />
+    <Compile Include="PowerState\PowerStateProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TickRunner\TickRunnerProgram.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

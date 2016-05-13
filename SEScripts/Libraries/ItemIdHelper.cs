@@ -7,7 +7,7 @@ namespace mze9412.SEScripts.Libraries
 
     public static class ItemIdHelper
     {
-        private static List<ItemDefinition> ItemDefinitions;
+        private static readonly List<ItemDefinition> ItemDefinitions;
 
         static ItemIdHelper()
         {
