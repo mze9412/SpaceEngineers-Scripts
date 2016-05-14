@@ -10,16 +10,21 @@
         /// If true the script tries to pull from directly attached grids and consolidate their inventory into its own
         /// </summary>
         public static bool PullFromAttachedGrids { get; set; }
+
+        /// <summary>
+        /// Try to keep all refineries busy
+        /// </summary>
+        public static bool ManageRefineries { get; set; }
         
         /// <summary>
-        /// If true, refineries are kept balanced (deviation of +-20% allowed)
+        /// Try to keep oxygen generators running
         /// </summary>
-        public static bool BalanceRefineries { get; set; }
+        public static bool ManageOxygenGenerators { get; set; }
 
         /// <summary>
         /// Makes sure to keep reactors on 10 ingots maximum, keepts rest in containers
         /// </summary>
-        public static bool RestrictReactorIngots { get; set; }
+        public static bool ManageReactors { get; set; }
 
         /// <summary>
         /// Tag for ore targets

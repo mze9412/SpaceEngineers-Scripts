@@ -87,6 +87,11 @@ namespace mze9412.SEScripts.Libraries
             return typeId.EndsWith("_Ore") && subTypeId == "Ice";
         }
 
+        public static bool IsUranium(string typeId, string subTypeId)
+        {
+            return typeId.EndsWith("_Ingot") && subTypeId == "Uranium";
+        }
+
         public static bool IsComponent(string typeId)
         {
             return typeId.EndsWith("_Component");

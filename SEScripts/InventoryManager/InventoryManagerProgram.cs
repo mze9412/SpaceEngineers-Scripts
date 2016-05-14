@@ -13,8 +13,9 @@ namespace mze9412.SEScripts.InventoryManager
             Manager = new InventoryManager(this);
 
             //configure script
-            InventoryManagerConfig.BalanceRefineries        = true;
-            InventoryManagerConfig.RestrictReactorIngots    = true;
+            InventoryManagerConfig.ManageRefineries         = true;
+            InventoryManagerConfig.ManageReactors           = true;
+            InventoryManagerConfig.ManageOxygenGenerators   = true;
             InventoryManagerConfig.PullFromAttachedGrids    = true;
             InventoryManagerConfig.OreContainerTag          = "[Ore]";
             InventoryManagerConfig.IngotsContainerTag       = "[Ingots]";
@@ -58,6 +59,8 @@ namespace mze9412.SEScripts.InventoryManager
         //#include(Actions/CollectFromConnectedGridsAction.cs,false)
         //#include(Actions/CollectItemsAction.cs,false)
         //#include(Actions/RefineryBalanceAction.cs,false)
+        //#include(Actions/OxyGeneratorBalanceAction.cs,false)
+        //#include(Actions/ReactorBalanceAction.cs,false)
         //#include(../Libraries/LCDHelper.cs,false)
         //#include(../Libraries/ItemIdHelper.cs,false)
         //#include(InventoryManager.cs,false)

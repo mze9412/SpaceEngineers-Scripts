@@ -22,6 +22,8 @@ namespace mze9412.SEScripts.InventoryManager
             Actions.AddLast(new CollectItemsAction(GridProgram, DisplayId));
             Actions.AddLast(new CollectFromConnectedGridsAction(GridProgram, DisplayId));
             Actions.AddLast(new RefineryBalanceAction(GridProgram, DisplayId));
+            Actions.AddLast(new OxyGeneratorBalanceAction(GridProgram, DisplayId));
+            Actions.AddLast(new ReactorBalanceAction(GridProgram, DisplayId));
 
             CurrentAction = Actions.First;
         }

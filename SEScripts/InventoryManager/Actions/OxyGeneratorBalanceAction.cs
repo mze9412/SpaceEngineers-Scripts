@@ -10,78 +10,90 @@ namespace mze9412.SEScripts.InventoryManager.Actions
     /**Begin copy here**/
 
     /// <summary>
-    /// Fills refineries
+    /// Makes sure oxygen generators do not run out of ice
     /// </summary>
-    public sealed class RefineryBalanceAction : InventoryManagerAction
+    public sealed class OxyGeneratorBalanceAction : InventoryManagerAction
     {
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="gridProgram"></param>
         /// <param name="displayId"></param>
-        public RefineryBalanceAction(MyGridProgram gridProgram, string displayId) : base(gridProgram, displayId, "RefineryBalance")
+        public OxyGeneratorBalanceAction(MyGridProgram gridProgram, string displayId) : base(gridProgram, displayId, "OxyGeneratorBalance")
         {
-            Refineries = new List<IMyRefinery>();
+            Generators = new List<IMyOxygenGenerator>();
             OreSources = new List<IMyTerminalBlock>();
         }
 
         /// <summary>
-        /// Cache for refineries
+        /// Cached oxy generators
         /// </summary>
-        private List<IMyRefinery> Refineries { get; set; } 
+        private List<IMyOxygenGenerator> Generators { get; set; }
 
         /// <summary>
-        /// Cache for ore sources
+        /// Cached ore sources
         /// </summary>
-        private List<IMyTerminalBlock> OreSources { get; set; } 
+        private List<IMyTerminalBlock> OreSources { get; set; }
 
         /// <summary>
-        /// Action implementation ;)
+        /// Action logic
         /// </summary>
         /// <param name="argument"></param>
+        /// <returns></returns>
         protected override bool RunCore(string argument)
         {
             //get refineries if none cached
-            if (Refineries.Count == 0)
+            if (Generators.Count == 0)
             {
                 //get refineries from own grid
-                var refineries = new List<IMyTerminalBlock>(25);
-                GridProgram.GridTerminalSystem.GetBlocksOfType<IMyRefinery>(refineries, x => x.CubeGrid == GridProgram.Me.CubeGrid);
+                var generators = new List<IMyTerminalBlock>(25);
+                GridProgram.GridTerminalSystem.GetBlocksOfType<IMyOxygenGenerator>(generators, x => x.CubeGrid == GridProgram.Me.CubeGrid);
 
                 //add to cache
-                foreach (var r in refineries)
+                foreach (var gen in generators)
                 {
-                    Refineries.Add((IMyRefinery)r);
+                    Generators.Add((IMyOxygenGenerator)gen);
 
                     //set use conveyor correctly
-                    r.SetValue("UseConveyor", !InventoryManagerConfig.ManageRefineries);
+                    gen.SetValue("UseConveyor", !InventoryManagerConfig.ManageOxygenGenerators);
                 }
             }
 
-            if (InventoryManagerConfig.ManageRefineries)
+            if (InventoryManagerConfig.ManageOxygenGenerators)
             {
-                //try to get ore to use
+                //try to find ice in source
                 IMyInventory sourceInventory;
                 int itemIndex;
                 bool abortScript;
-                if (GetSourceOre(out sourceInventory, out itemIndex, out abortScript))
+                if (GetIce(out sourceInventory, out itemIndex, out abortScript))
                 {
-                    //check all refineries
-                    foreach (var r in Refineries)
+                    //check all generators
+                    foreach (var gen in Generators)
                     {
-                        //if one refinery is broken, throw out all and redo next run
-                        if (!r.IsWorking || !r.IsFunctional)
+                        //if one generator is broken, throw out all and redo next run
+                        if (!gen.IsWorking || !gen.IsFunctional)
                         {
-                            Refineries.Clear();
+                            Generators.Clear();
                             return false;
                         }
 
-                        //transfer 1000 or amount (min) if ref is empty
-                        var inv = r.GetInventory(0);
-                        if (inv.GetItems().Count == 0)
+                        //check how much ice is in the generator and try to fill up to 10.000 if is below 7500
+                        decimal iceFound = 0;
+                        var items = gen.GetInventory(0).GetItems();
+                        for (int i = 0; i < items.Count; i++)
                         {
-                            var amount = Math.Min((decimal) sourceInventory.GetItems()[itemIndex].Amount, 1000);
-                            TransferItem(sourceInventory, inv, itemIndex, amount);
+                            var item = items[i];
+                            if (ItemIdHelper.IsIce(item.Content.TypeId.ToString(), item.Content.SubtypeId.ToString()))
+                            {
+                                iceFound += (decimal)item.Amount;
+                            }
+                        }
+
+                        //try to fill and end loop
+                        if (iceFound < 7500)
+                        {
+                            var amount = Math.Min((decimal)sourceInventory.GetItems()[itemIndex].Amount, 10000 - iceFound);
+                            TransferItem(sourceInventory, gen.GetInventory(0), itemIndex, amount);
 
                             //finished for now
                             return true;
@@ -99,7 +111,7 @@ namespace mze9412.SEScripts.InventoryManager.Actions
             //all done
             return true;
         }
-
+        
         /// <summary>
         /// Try to found source ore in sources
         /// </summary>
@@ -107,7 +119,7 @@ namespace mze9412.SEScripts.InventoryManager.Actions
         /// <param name="itemIndex"></param>
         /// <param name="abortScript"></param>
         /// <returns></returns>
-        private bool GetSourceOre(out IMyInventory inventory, out int itemIndex, out bool abortScript)
+        private bool GetIce(out IMyInventory inventory, out int itemIndex, out bool abortScript)
         {
             //default
             abortScript = false;
@@ -131,13 +143,13 @@ namespace mze9412.SEScripts.InventoryManager.Actions
 
                 var inv = source.GetInventory(0);
                 var items = inv.GetItems();
-                
+
                 //check all items
                 for (int i = 0; i < items.Count; i++)
                 {
                     //check item, return its values if correct one found
                     var item = items[i];
-                    if (ItemIdHelper.IsOre(item.Content.TypeId.ToString()) && !ItemIdHelper.IsIce(item.Content.TypeId.ToString(), item.Content.SubtypeId.ToString()))
+                    if (ItemIdHelper.IsIce(item.Content.TypeId.ToString(), item.Content.SubtypeId.ToString()))
                     {
                         inventory = inv;
                         itemIndex = i;
