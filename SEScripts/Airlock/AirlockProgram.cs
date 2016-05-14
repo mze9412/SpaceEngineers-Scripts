@@ -60,6 +60,7 @@ namespace mze9412.SEScripts.Airlock
                 }
             }
 
+            //run each airlock and cycle airlock into new state
 
 
             //print and delete LCD
