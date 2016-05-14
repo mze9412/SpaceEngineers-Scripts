@@ -59,6 +59,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionPrinter\ActionPrinterProgram.cs" />
+    <Compile Include="Airlock\Airlock.cs" />
+    <Compile Include="Airlock\AirlockProgram.cs" />
+    <Compile Include="Airlock\States\AirlockStateBase.cs" />
+    <Compile Include="Airlock\States\AirlockStateInternalOpen.cs" />
     <Compile Include="CargoState\CargoStateProgram.cs" />
     <Compile Include="DistanceWarning\DistanceWarningProgram.cs" />
     <Compile Include="InventoryManager\Actions\CollectFromConnectedGridsAction.cs" />
@@ -80,6 +84,7 @@
   <ItemGroup>
     <Content Include="Readme.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

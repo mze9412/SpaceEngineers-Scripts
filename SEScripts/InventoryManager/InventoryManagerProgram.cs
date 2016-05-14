@@ -44,8 +44,8 @@ namespace mze9412.SEScripts.InventoryManager
             //add up time since last run
             TimeSinceLastRun += Runtime.TimeSinceLastRun;
 
-            //if time < 0.5s -> do not run
-            if (TimeSinceLastRun.TotalMilliseconds < 250 && TimeSinceLastRun.TotalMilliseconds > 0)
+            //if time < 0.5s -> do not run (so only two actions should run per second) to preserve sim speed
+            if (TimeSinceLastRun.TotalMilliseconds < 500 && TimeSinceLastRun.TotalMilliseconds > 0)
             {
                 return;
             }
