@@ -33,7 +33,6 @@ namespace mze9412.ScriptCompiler.Helpers
         /// <param name="first">if starting with an empty StringBuilder this has to be true</param>
         public static void Includefile(StringBuilder addToMe, string filename, bool makeCompact, int linetheshold = -1, bool first = false)
         {
-
             try
             {
                 var addMe = new StringBuilder();
@@ -73,7 +72,7 @@ namespace mze9412.ScriptCompiler.Helpers
                                     var incl =
                                         line.Trim()
                                             .Substring(line.Trim().IndexOf('(') + 1, line.Trim().IndexOf(')') - line.Trim().IndexOf('(') - 1)
-                                            .Split(new[] {','});
+                                            .Split(',');
 
                                     try
                                     {
