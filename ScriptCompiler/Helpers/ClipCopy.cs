@@ -39,110 +39,112 @@ namespace mze9412.ScriptCompiler.Helpers
                 var addMe = new StringBuilder();
                 if (!first) addMe.Append(makeCompact ? "}" : "\n}\n");
 
-                var readMe = new StreamReader(filename);
-                string line;
-                var started = false;
-                var stop = false;
-                var currlinelength = 0;
-                var tresholdLength = linetheshold;
-                bool linecommentErrorShown = false;
-                while ((line = readMe.ReadLine()) != null && !stop)
+                using (var readMe = new StreamReader(filename))
                 {
-                    if (!started)
+                    string line;
+                    var started = false;
+                    var stop = false;
+                    var currlinelength = 0;
+                    var tresholdLength = linetheshold;
+                    bool linecommentErrorShown = false;
+                    while ((line = readMe.ReadLine()) != null && !stop)
                     {
-                        if (line.Contains("/**Begin copy here**"))
+                        if (!started)
                         {
-                            started = true;
-                        }
-                    }
-                    else
-                    {
-                        if (line.Contains("/**End copy here**"))
-                        {
-                            stop = true;
-                        }
-                        else if (line.Trim().StartsWith("///"))
-                        {
-                            continue;
+                            if (line.Contains("/**Begin copy here**"))
+                            {
+                                started = true;
+                            }
                         }
                         else
                         {
-                            if (line.Trim().StartsWith("//#include"))
+                            if (line.Contains("/**End copy here**"))
                             {
-                                var incl =
-                                    line.Trim()
-                                        .Substring(line.Trim().IndexOf('(') + 1, line.Trim().IndexOf(')') - line.Trim().IndexOf('(') - 1)
-                                        .Split(new[] { ',' });
-
-                                try
-                                {
-                                    Includefile(addMe, new FileInfo(filename).Directory.FullName + "\\" + incl[0], bool.Parse(incl[1]));
-                                }
-                                catch (Exception x)
-                                {
-                                    Console.WriteLine("Inner NOPE:\n" + incl[0] + "\n" + incl[1] + "\n" + x);
-                                }
+                                stop = true;
+                            }
+                            else if (line.Trim().StartsWith("///"))
+                            {
+                                continue;
                             }
                             else
                             {
-                                if (line.Trim().Contains("//#replace")) //#replace(what,withwhat) << has to be on the end of the line
+                                if (line.Trim().StartsWith("//#include"))
                                 {
-                                    var curr = line.Trim();
-                                    var start = curr.IndexOf("//#replace");
-                                    var begin = curr.IndexOf('(', start);
-                                    var replaceIn = curr.Substring(0, start);
+                                    var incl =
+                                        line.Trim()
+                                            .Substring(line.Trim().IndexOf('(') + 1, line.Trim().IndexOf(')') - line.Trim().IndexOf('(') - 1)
+                                            .Split(new[] {','});
 
-                                    var repWhat =
-                                        curr
-                                            .Substring(begin + 1, line.Trim().IndexOf(')', begin) - begin - 1)
-                                            .Split(new[] { ',' });
-
-                                    var result = replaceIn.Replace(repWhat[0], repWhat[1]);
-
-                                    if (makeCompact)
+                                    try
                                     {
-                                        if (result.Contains("//") && !linecommentErrorShown)
-                                        {
-                                            Console.WriteLine(filename + "\nThere seems to be a single line comment. This will cause errors in compact mode, please replace with a delimited-comment");
-                                            linecommentErrorShown = true;
-                                        }
-                                        addMe.Append(result);
-                                        currlinelength += result.Length;
-                                        if (tresholdLength >= 0 && currlinelength > tresholdLength) //TODO same as below
-                                        {
-                                            addMe.AppendLine();
-                                            currlinelength = 0;
-                                        }
+                                        Includefile(addMe, new FileInfo(filename).Directory.FullName + "\\" + incl[0], bool.Parse(incl[1]));
                                     }
-                                    else
+                                    catch (Exception x)
                                     {
-                                        addMe.AppendLine(result);
+                                        Console.WriteLine("Inner NOPE:\n" + incl[0] + "\n" + incl[1] + "\n" + x);
                                     }
-
                                 }
-                                else if (!string.IsNullOrEmpty(line.Trim()))
+                                else
                                 {
-                                    if (makeCompact)
+                                    if (line.Trim().Contains("//#replace")) //#replace(what,withwhat) << has to be on the end of the line
                                     {
-                                        var nextline = line.Trim();
+                                        var curr = line.Trim();
+                                        var start = curr.IndexOf("//#replace");
+                                        var begin = curr.IndexOf('(', start);
+                                        var replaceIn = curr.Substring(0, start);
 
-                                        if (nextline.Contains("//") && !linecommentErrorShown)
+                                        var repWhat =
+                                            curr
+                                                .Substring(begin + 1, line.Trim().IndexOf(')', begin) - begin - 1)
+                                                .Split(new[] {','});
+
+                                        var result = replaceIn.Replace(repWhat[0], repWhat[1]);
+
+                                        if (makeCompact)
                                         {
-                                            Console.WriteLine(filename + "\nThere seems to be a single line comment. This will cause errors in compact mode, please replace with a delimited-comment");
-                                            linecommentErrorShown = true;
+                                            if (result.Contains("//") && !linecommentErrorShown)
+                                            {
+                                                Console.WriteLine(filename + "\nThere seems to be a single line comment. This will cause errors in compact mode, please replace with a delimited-comment");
+                                                linecommentErrorShown = true;
+                                            }
+                                            addMe.Append(result);
+                                            currlinelength += result.Length;
+                                            if (tresholdLength >= 0 && currlinelength > tresholdLength) //TODO same as below
+                                            {
+                                                addMe.AppendLine();
+                                                currlinelength = 0;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            addMe.AppendLine(result);
                                         }
 
-                                        addMe.Append(nextline);
-                                        currlinelength += nextline.Length;
-                                        if (tresholdLength >= 0 && currlinelength > tresholdLength) //TODO same as above
-                                        {
-                                            addMe.AppendLine();
-                                            currlinelength = 0;
-                                        }
                                     }
-                                    else
+                                    else if (!string.IsNullOrEmpty(line.Trim()))
                                     {
-                                        addMe.AppendLine(line);
+                                        if (makeCompact)
+                                        {
+                                            var nextline = line.Trim();
+
+                                            if (nextline.Contains("//") && !linecommentErrorShown)
+                                            {
+                                                Console.WriteLine(filename + "\nThere seems to be a single line comment. This will cause errors in compact mode, please replace with a delimited-comment");
+                                                linecommentErrorShown = true;
+                                            }
+
+                                            addMe.Append(nextline);
+                                            currlinelength += nextline.Length;
+                                            if (tresholdLength >= 0 && currlinelength > tresholdLength) //TODO same as above
+                                            {
+                                                addMe.AppendLine();
+                                                currlinelength = 0;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            addMe.AppendLine(line);
+                                        }
                                     }
                                 }
                             }
