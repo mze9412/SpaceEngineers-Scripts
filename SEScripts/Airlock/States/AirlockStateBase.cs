@@ -1,28 +1,63 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace mze9412.SEScripts.Airlock.States
 {
+    /**Begin copy here**/
+
     public abstract class AirlockStateBase
     {
         protected AirlockStateBase(Airlock airlock, string name)
         {
             Name = name;
             Airlock = airlock;
+            TotalStateTime = new TimeSpan();
         }
 
         public string Name { get; private set; }
 
         public Airlock Airlock { get; private set; }
 
-        public void Run(string argument)
+        public TimeSpan TotalStateTime { get; private set; }
+
+        public AirlockStateBase Run(string argument, TimeSpan timeSinceLastRun)
         {
-            RunCore(argument);
+            TotalStateTime += timeSinceLastRun;
+            return RunCore(argument);
         }
 
-        protected abstract void RunCore(string argument);
+        public void EnterState()
+        {
+            EnterStateCore();
+        }
+
+        public void ExitState()
+        {
+            ExitStateCore();
+        }
+
+        public string Describe()
+        {
+            return DescribeCore();
+        }
+
+        protected abstract string DescribeCore();
+
+        /// <summary>
+        /// Runs the state (internal method)
+        /// </summary>
+        /// <param name="argument"></param>
+        protected abstract AirlockStateBase RunCore(string argument);
+
+        /// <summary>
+        /// Enters the state (internal method)
+        /// </summary>
+        protected abstract void EnterStateCore();
+
+        /// <summary>
+        /// Exits the state (internal method)
+        /// </summary>
+        protected abstract void ExitStateCore();
+
+        /**End copy here**/
     }
 }

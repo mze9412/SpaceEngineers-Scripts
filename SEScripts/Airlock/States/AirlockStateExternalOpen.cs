@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace mze9412.SEScripts.Airlock.States
+﻿namespace mze9412.SEScripts.Airlock.States
 {
     /**Begin copy here**/
 
@@ -10,21 +8,21 @@ namespace mze9412.SEScripts.Airlock.States
     /// - External door closed
     /// - Pressurized
     /// </summary>
-    public sealed class AirlockStateInternalOpen : AirlockStateBase
+    public sealed class AirlockStateExternalOpen : AirlockStateBase
     {
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="airlock"></param>
-        public AirlockStateInternalOpen(Airlock airlock)
-            : base(airlock, "AirlockStateInternalOpen")
+        public AirlockStateExternalOpen(Airlock airlock)
+            : base(airlock, "AirlockStateExternalOpen")
         {
 
         }
 
         protected override string DescribeCore()
         {
-            return "Pressurized. Internal open.";
+            return "Depressurized. External open.";
         }
 
         /// <summary>
@@ -34,11 +32,11 @@ namespace mze9412.SEScripts.Airlock.States
         /// <returns></returns>
         protected override AirlockStateBase RunCore(string argument)
         {
-            //if someone stands in front of external door OR inside airlock -> cycle around
-            if (Airlock.ExternalSensor.LastDetectedEntity != null || Airlock.AirlockSensor.LastDetectedEntity != null)
+            //if someone stands in front of internal door OR inside airlock -> cycle around
+            if (Airlock.InternalSensor.LastDetectedEntity != null || Airlock.AirlockSensor.LastDetectedEntity != null)
             {
                 //switch to new state of someone wants in or is standing outside
-                return new AirlockStateDepressurizing(Airlock);
+                return new AirlockStatePressurizing(Airlock);
             }
 
             //state continues
