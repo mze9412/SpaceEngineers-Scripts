@@ -16,10 +16,16 @@ namespace mze9412.SEScripts.InventoryManager.Actions
         /// Ctor
         /// </summary>
         /// <param name="gridProgram"></param>
-        public CollectItemsAction(MyGridProgram gridProgram) : base(gridProgram, "CollectItems")
+        /// <param name="displayId"></param>
+        public CollectItemsAction(MyGridProgram gridProgram, string displayId) : base(gridProgram, displayId, "CollectItems")
         {
-
+            Sources = new List<IMyTerminalBlock>();
         }
+
+        /// <summary>
+        /// List of cached source blocks
+        /// </summary>
+        private List<IMyTerminalBlock> Sources { get; set; } 
 
         /// <summary>
         /// Action implementation ;)
@@ -27,13 +33,26 @@ namespace mze9412.SEScripts.InventoryManager.Actions
         /// <param name="argument"></param>
         protected override bool RunCore(string argument)
         {
-            //get all blocks with inventories which are not a gun (i.e. turrets) and which do not use the Ignore keyworkd
-            var sources = new List<IMyTerminalBlock>(100);
-            GridProgram.GridTerminalSystem.GetBlocksOfType<IMyTerminalBlock>(sources, x => x.CubeGrid == GridProgram.Me.CubeGrid && x is IMyInventoryOwner&& !(x is IMyUserControllableGun || x is IMyReactor) && !x.CustomName.Contains(InventoryManagerConfig.IgnoreContainerTag));
+            //get source blocks if sources are empty
+            if (Sources.Count == 0)
+            {
+                //get all blocks with inventories which are not a gun (i.e. turrets) and which do not use the Ignore keyworkd
+                GridProgram.GridTerminalSystem.GetBlocksOfType<IMyTerminalBlock>(Sources, x => x.CubeGrid == GridProgram.Me.CubeGrid && x is IMyInventoryOwner && !(x is IMyUserControllableGun || x is IMyReactor || x is IMyOxygenGenerator) && !x.CustomName.Contains(InventoryManagerConfig.IgnoreContainerTag));
+
+            }
 
             //go through all blocks and empty them
-            foreach (var source in sources)
+            foreach (var source in Sources)
             {
+                //if one source is broken, throw out all and redo next run
+                if (!source.IsWorking || !source.IsFunctional)
+                {
+                    Sources.Clear();
+                    return false;
+                }
+
+                LCDHelper.WriteLine(DisplayId, "Collecting from source " + source.CustomName);
+
                 //assemblers and refineries are only emptied from their second output inventory
                 var inventoryIndex = 0;
                 if (source is IMyAssembler || source is IMyRefinery)
@@ -53,17 +72,20 @@ namespace mze9412.SEScripts.InventoryManager.Actions
                     var type = ItemIdHelper.GetItemType(item.Content.TypeId.ToString());
 
                     //do not sort if already in correct container
-                    if (type == 0 && source.CustomName.Contains(InventoryManagerConfig.OreContainerTag)
-                        || type == 1 && source.CustomName.Contains(InventoryManagerConfig.IngotsContainerTag)
-                        || type == 2 && source.CustomName.Contains(InventoryManagerConfig.ComponentsContainerTag)
-                        || type == 3 && source.CustomName.Contains(InventoryManagerConfig.MiscContainerTag)
+                    if ((type == 0 && source.CustomName.Contains(InventoryManagerConfig.OreContainerTag))
+                        || (type == 1 && source.CustomName.Contains(InventoryManagerConfig.IngotsContainerTag))
+                        || (type == 2 && source.CustomName.Contains(InventoryManagerConfig.ComponentsContainerTag))
+                        || (type == 3 && source.CustomName.Contains(InventoryManagerConfig.MiscContainerTag))
                         )
                     {
                         continue;
                     }
-                    
+
+                    LCDHelper.WriteLine(DisplayId, "Collecting item " + item.Content.TypeId + "///" + item.Content.SubtypeId);
+
                     //find cargo target and transfer
                     var target = GetTargetForItem(sourceInventory, type);
+                    LCDHelper.WriteLine(DisplayId, "Target: " + (target == null ? "None" : target.CustomName));
                     if (target != null)
                     {
                         TransferItem(sourceInventory, target.GetInventory(0), i);

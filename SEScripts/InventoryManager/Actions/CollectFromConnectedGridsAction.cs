@@ -2,6 +2,7 @@
 using mze9412.SEScripts.Libraries;
 using Sandbox.ModAPI.Ingame;
 using VRage.Game.ModAPI.Ingame;
+using VRage.Library.Collections;
 
 namespace mze9412.SEScripts.InventoryManager.Actions
 {
@@ -16,9 +17,16 @@ namespace mze9412.SEScripts.InventoryManager.Actions
         /// Ctor
         /// </summary>
         /// <param name="gridProgram"></param>
-        public CollectFromConnectedGridsAction(MyGridProgram gridProgram) : base(gridProgram, "CollectFromConnectedGrids")
+        /// <param name="displayId"></param>
+        public CollectFromConnectedGridsAction(MyGridProgram gridProgram, string displayId) : base(gridProgram, displayId, "CollectFromConnectedGrids")
         {
+            Connectors = new List<IMyShipConnector>();
         }
+
+        /// <summary>
+        /// Cached connectors
+        /// </summary>
+        private List<IMyShipConnector> Connectors { get; set; } 
 
         /// <summary>
         /// Action implementation ;)
@@ -26,17 +34,32 @@ namespace mze9412.SEScripts.InventoryManager.Actions
         /// <param name="argument"></param>
         protected override bool RunCore(string argument)
         {
-            //get all own connectors
-            var connectors = new List<IMyTerminalBlock>(25);
-            GridProgram.GridTerminalSystem.GetBlocksOfType<IMyShipConnector>(connectors, x => x.CubeGrid == GridProgram.Me.CubeGrid);
+            //get connectors if none cached
+            if (Connectors.Count == 0)
+            {
+                //get all own connectors from own grid
+                var connectors = new List<IMyTerminalBlock>(25);
+                GridProgram.GridTerminalSystem.GetBlocksOfType<IMyShipConnector>(connectors, x => x.CubeGrid == GridProgram.Me.CubeGrid);
+
+                //cast them to correct type and add to cache
+                foreach (var conn in connectors)
+                {
+                    Connectors.Add((IMyShipConnector)conn);
+                }
+            }
 
             //check all for connections
-            foreach (var conn in connectors)
+            foreach (var conn in Connectors)
             {
-                var c = (IMyShipConnector) conn;
+                //if one connector is broken, throw out all and redo next run
+                if (!conn.IsWorking || !conn.IsFunctional)
+                {
+                    Connectors.Clear();
+                    return false;
+                }
 
                 //get connected connector and continue if ignore tag is not set, ignore connected grid if connector has ignore tag
-                var connectedConnector = c.OtherConnector;
+                var connectedConnector = conn.OtherConnector;
                 if (connectedConnector != null && !connectedConnector.CustomName.Contains(InventoryManagerConfig.IgnoreContainerTag))
                 {
                     var allDone = EmptyGrid(connectedConnector);

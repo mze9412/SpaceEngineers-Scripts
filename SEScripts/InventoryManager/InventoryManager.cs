@@ -19,9 +19,9 @@ namespace mze9412.SEScripts.InventoryManager
             RunCounter = 0;
 
             Actions = new LinkedList<InventoryManagerAction>();
-            Actions.AddLast(new CollectItemsAction(GridProgram));
-            Actions.AddLast(new CollectFromConnectedGridsAction(GridProgram));
-            Actions.AddLast(new RefineryBalanceAction(GridProgram));
+            Actions.AddLast(new CollectItemsAction(GridProgram, DisplayId));
+            Actions.AddLast(new CollectFromConnectedGridsAction(GridProgram, DisplayId));
+            Actions.AddLast(new RefineryBalanceAction(GridProgram, DisplayId));
 
             CurrentAction = Actions.First;
         }
@@ -71,7 +71,7 @@ namespace mze9412.SEScripts.InventoryManager
 
             //execute action and switch to next if finished
             LCDHelper.WriteLine(DisplayId, "Running: " + CurrentAction.Value.Name);
-            var finished = CurrentAction.Value.Run(DisplayId);
+            var finished = CurrentAction.Value.Run(argument);
             LCDHelper.WriteLine(DisplayId, "Finished: " + finished);
             if (finished)
             {
@@ -83,6 +83,10 @@ namespace mze9412.SEScripts.InventoryManager
             {
                 CurrentAction = Actions.First;
             }
+
+            //print instruction count percentage
+            var perc = (double) GridProgram.Runtime.CurrentInstructionCount/(double) GridProgram.Runtime.MaxInstructionCount;
+            LCDHelper.WriteProgressBar(DisplayId, "Instructions", perc);
 
             //print and delete LCD
             LCDHelper.PrintDisplay(DisplayId);

@@ -22,7 +22,7 @@ namespace mze9412.SEScripts.Libraries
         /// </summary>
         private static readonly Dictionary<string, Display> displays;
 
-        private static bool AutoFlush = true;
+        private static bool AutoFlush = false;
 
         /// <summary>
         /// Spacer char

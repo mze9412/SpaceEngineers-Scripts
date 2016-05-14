@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using mze9412.SEScripts.Libraries;
 using Sandbox.ModAPI.Ingame;
 using VRage.Game.ModAPI.Ingame;
 
@@ -15,11 +16,15 @@ namespace mze9412.SEScripts.InventoryManager.Actions
         /// <summary>
         /// Ctor
         /// </summary>
-        protected InventoryManagerAction(MyGridProgram gridProgram, string name)
+        protected InventoryManagerAction(MyGridProgram gridProgram, string displayId, string name)
         {
             if (gridProgram == null)
             {
                 throw new ArgumentNullException("gridProgram");
+            }
+            if (string.IsNullOrWhiteSpace(displayId))
+            {
+                throw new ArgumentNullException("displayId");
             }
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -27,6 +32,7 @@ namespace mze9412.SEScripts.InventoryManager.Actions
             }
 
             GridProgram = gridProgram;
+            DisplayId = displayId;
             Name = name;
         }
 
@@ -41,6 +47,31 @@ namespace mze9412.SEScripts.InventoryManager.Actions
         /// Access to grid program
         /// </summary>
         public MyGridProgram GridProgram { get; private set; }
+
+        /// <summary>
+        /// Id for displaying output via LCDHelper
+        /// </summary>
+        public string DisplayId { get; private set; }
+
+        /// <summary>
+        /// Current target for ores (used for caching)
+        /// </summary>
+        protected IMyTerminalBlock TargetOre { get; set; }
+
+        /// <summary>
+        /// Current target for ingots (used for caching)
+        /// </summary>
+        protected IMyTerminalBlock TargetIngots { get; set; }
+
+        /// <summary>
+        /// Current target for components (used for caching)
+        /// </summary>
+        protected IMyTerminalBlock TargetComponents { get; set; }
+
+        /// <summary>
+        /// Current target for misc items (used for caching)
+        /// </summary>
+        protected IMyTerminalBlock TargetMisc { get; set; }
 
         #endregion
 
@@ -83,6 +114,35 @@ namespace mze9412.SEScripts.InventoryManager.Actions
         /// <returns></returns>
         protected IMyTerminalBlock GetTargetForItem(IMyInventory sourceInventory, int type)
         {
+            //shortcut: if target already known, return immediately
+            switch (type)
+            {
+                case 0:
+                    if (TargetOre != null && (double)TargetOre.GetInventory(0).CurrentVolume / (double)TargetOre.GetInventory(0).MaxVolume < 0.9)
+                    {
+                        return TargetOre;
+                    }
+                    break;
+                case 1:
+                    if (TargetIngots != null && (double)TargetIngots.GetInventory(0).CurrentVolume / (double)TargetIngots.GetInventory(0).MaxVolume < 0.9)
+                    {
+                        return TargetIngots;
+                    }
+                    break;
+                case 2:
+                    if (TargetComponents != null && (double)TargetComponents.GetInventory(0).CurrentVolume / (double)TargetComponents.GetInventory(0).MaxVolume < 0.9)
+                    {
+                        return TargetComponents;
+                    }
+                    break;
+                case 3:
+                    if (TargetMisc != null && (double)TargetMisc.GetInventory(0).CurrentVolume / (double)TargetMisc.GetInventory(0).MaxVolume < 0.9)
+                    {
+                        return TargetMisc;
+                    }
+                    break;
+            }
+
             //determine tag
             var tag = string.Empty;
             switch (type)
@@ -111,9 +171,24 @@ namespace mze9412.SEScripts.InventoryManager.Actions
             var targets = new List<IMyTerminalBlock>(25);
             GridProgram.GridTerminalSystem.GetBlocksOfType<IMyTerminalBlock>(targets, x => x.CubeGrid == GridProgram.Me.CubeGrid && x is IMyInventoryOwner && x.CustomName.Contains(tag) && ((double)x.GetInventory(0).CurrentVolume / (double)x.GetInventory(0).MaxVolume < 0.9) && x.GetInventory(0).IsConnectedTo(sourceInventory));
 
-            //return first target
+            //return first target and cache target
             if (targets.Count > 0)
             {
+                switch (type)
+                {
+                    case 0:
+                        TargetOre = targets[0];
+                        break;
+                    case 1:
+                        TargetIngots = targets[0];
+                        break;
+                    case 2:
+                        TargetComponents = targets[0];
+                        break;
+                    case 3:
+                        TargetMisc = targets[0];
+                        break;
+                }
                 return targets[0];
             }
 
@@ -128,24 +203,29 @@ namespace mze9412.SEScripts.InventoryManager.Actions
         /// <param name="targetInventory"></param>
         /// <param name="itemIndex"></param>
         /// <param name="amount"></param>
-        protected void TransferItem(IMyInventory sourceInventory, IMyInventory targetInventory, int itemIndex, double amount = double.NaN)
+        protected void TransferItem(IMyInventory sourceInventory, IMyInventory targetInventory, int itemIndex, decimal amount = -1)
         {
             var item = sourceInventory.GetItems()[itemIndex];
 
             //get amount
-            if (double.IsNaN(amount))
+            if (amount == -1)
             {
-                amount = (double)item.Amount;
+                amount = (Decimal)item.Amount;
             }
             {
-                amount = Math.Min(amount, (double)item.Amount);
+                amount = Math.Min(amount, (decimal)item.Amount);
             }
+            
 
             //get target index
             var targetIndex = GetIndexForItem(targetInventory, item.Content.TypeId.ToString(), item.Content.SubtypeId.ToString());
 
+            LCDHelper.WriteLine(DisplayId, "Transfer amount: " + amount);
+            LCDHelper.WriteLine(DisplayId, "Target index: " + targetIndex);
+
             //transfer item
-            sourceInventory.TransferItemTo(targetInventory, itemIndex, targetIndex == -1 ? 0 : targetIndex, true, (int)amount);
+            bool success = sourceInventory.TransferItemTo(targetInventory, itemIndex, targetIndex == -1 ? 0 : targetIndex, true, (VRage.MyFixedPoint)amount);
+            LCDHelper.WriteLine(DisplayId, "Transfer success: " + success);
         }
 
         /// <summary>
