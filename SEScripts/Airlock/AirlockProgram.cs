@@ -61,8 +61,10 @@ namespace mze9412.SEScripts.Airlock
                 }
             }
 
-            //run each airlock and cycle airlock into new state
+            //add header
+            LCDHelper.WriteHeader(DisplayId, "Airlocks");
             
+            //run each airlock and cycle airlock into new state
             foreach (var airlock in Airlocks)
             {
                 if (airlock.IsIntact)
