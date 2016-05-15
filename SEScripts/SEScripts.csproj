@@ -82,6 +82,7 @@
     <Compile Include="Libraries\LCDHelper.cs" />
     <Compile Include="PowerState\PowerStateProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SensorTester\SensorTesterProgram.cs" />
     <Compile Include="TickRunner\TickRunnerProgram.cs" />
   </ItemGroup>
   <ItemGroup>

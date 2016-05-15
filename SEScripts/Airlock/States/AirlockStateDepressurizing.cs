@@ -32,13 +32,13 @@
         {
             //if state was active for at least 1s
             //--> start pressurization
-            if (TotalStateTime.Milliseconds > 1000)
+            if (TotalStateTime.TotalMilliseconds > 1000)
             {
                 Airlock.Depressurize();
             }
 
             //open internal if pressure is high enough or after 10 seconds
-            if (Airlock.IsDepressurized || TotalStateTime.Milliseconds > 10000)
+            if (Airlock.IsDepressurized || TotalStateTime.TotalMilliseconds > 10000)
             {
                 //got to new state
                 return new AirlockStateExternalOpen(Airlock);
@@ -61,6 +61,7 @@
         /// </summary>
         protected override void ExitStateCore()
         {
+            //open door
             Airlock.OpenExternal();
         }
 

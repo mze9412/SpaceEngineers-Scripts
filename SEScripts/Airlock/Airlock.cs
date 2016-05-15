@@ -1,4 +1,5 @@
-﻿using Sandbox.ModAPI.Ingame;
+﻿using mze9412.SEScripts.Airlock.States;
+using Sandbox.ModAPI.Ingame;
 using SpaceEngineers.Game.ModAPI.Ingame;
 
 namespace mze9412.SEScripts.Airlock
@@ -24,7 +25,7 @@ namespace mze9412.SEScripts.Airlock
             AirlockIndex = airlockIndex;
             InternalSensor = (IMySensorBlock)gridProgram.GridTerminalSystem.GetBlockWithName(string.Format(AirlockInternalSensorPattern, AirlockIndex));
             ExternalSensor = (IMySensorBlock)gridProgram.GridTerminalSystem.GetBlockWithName(string.Format(AirlockExternalSensorPattern, AirlockIndex));
-            AirlockSensor = (IMySensorBlock)gridProgram.GridTerminalSystem.GetBlockWithName(string.Format(AirlockExternalSensorPattern, AirlockIndex));
+            AirlockSensor = (IMySensorBlock)gridProgram.GridTerminalSystem.GetBlockWithName(string.Format(AirlockSensorPattern, AirlockIndex));
             InternalDoor = (IMyDoor)gridProgram.GridTerminalSystem.GetBlockWithName(string.Format(AirlockInternalDoorPattern, AirlockIndex));
             ExternalDoor = (IMyDoor)gridProgram.GridTerminalSystem.GetBlockWithName(string.Format(AirlockExternalDoorPattern, AirlockIndex));
             AirVent = (IMyAirVent)gridProgram.GridTerminalSystem.GetBlockWithName(string.Format(AirlockAirVentPattern, AirlockIndex));
@@ -44,6 +45,8 @@ namespace mze9412.SEScripts.Airlock
 
         public IMyAirVent AirVent { get; private set; }
 
+        public AirlockStateBase CurrentState { get; set; }
+
         #region Interaction with Airlock
 
         /// <summary>
@@ -51,7 +54,7 @@ namespace mze9412.SEScripts.Airlock
         /// </summary>
         public bool IsPressurized
         {
-            get { return AirVent.CanPressurize && !AirVent.IsDepressurizing && AirVent.GetOxygenLevel() > 0.95; }
+            get { return !AirVent.IsDepressurizing && AirVent.GetOxygenLevel() > 0.95; }
         }
 
         /// <summary>
@@ -59,7 +62,7 @@ namespace mze9412.SEScripts.Airlock
         /// </summary>
         public bool IsDepressurized
         {
-            get { return !AirVent.CanPressurize && AirVent.IsDepressurizing && AirVent.GetOxygenLevel() < 0.05; }
+            get { return AirVent.IsDepressurizing && AirVent.GetOxygenLevel() < 0.05; }
         }
 
         /// <summary>

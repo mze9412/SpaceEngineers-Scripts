@@ -34,6 +34,12 @@ namespace mze9412.SEScripts.Airlock.States
         /// <returns></returns>
         protected override AirlockStateBase RunCore(string argument)
         {
+            //abort if not yet 10s in this state
+            if (TotalStateTime.TotalMilliseconds < 10000)
+            {
+                return this;
+            }
+
             //if someone stands in front of external door OR inside airlock -> cycle around
             if (Airlock.ExternalSensor.LastDetectedEntity != null || Airlock.AirlockSensor.LastDetectedEntity != null)
             {

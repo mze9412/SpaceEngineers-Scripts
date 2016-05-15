@@ -25,10 +25,10 @@ namespace mze9412.SEScripts.Airlock
         /// </summary>
         public AirlockProgram() //#replace(AirlockProgram,Program)
         {
-            Airlocks = new Dictionary<Airlock, AirlockStateBase>();
+            Airlocks = new List<Airlock>();
         }
         
-        public Dictionary<Airlock, AirlockStateBase> Airlocks { get; set; } 
+        public List<Airlock> Airlocks { get; set; } 
 
         public void Main(string argument)
         {
@@ -52,34 +52,29 @@ namespace mze9412.SEScripts.Airlock
                     var airlock = new Airlock(i + 1, this);
                     if (airlock.IsIntact)
                     {
-                        var state = new AirlockStateInternalOpen(airlock);
+                        //start with all airlocks pressurized
+                        var state = new AirlockStatePressurizing(airlock);
                         state.EnterState();
-                        Airlocks.Add(airlock, state);
-                    }
-                    else
-                    {
+                        airlock.CurrentState = state;
+                        Airlocks.Add(airlock);
                     }
                 }
             }
 
             //run each airlock and cycle airlock into new state
-            foreach (var airlock in Airlocks.Keys)
+            
+            foreach (var airlock in Airlocks)
             {
                 if (airlock.IsIntact)
                 {
-                    var state = Airlocks[airlock];
+                    var state = airlock.CurrentState;
                     LCDHelper.WriteLine(DisplayId, string.Format("Airlock {0}: {1}", airlock.AirlockIndex, state.Describe()));
-                    Echo("State: " + state.Name);
-                    Echo("Int: " + (airlock.InternalSensor.LastDetectedEntity != null ? "FOUND" : "NONE"));
-                    Echo("Ext: " + (airlock.ExternalSensor.LastDetectedEntity != null ? "FOUND" : "NONE"));
-                    Echo("Airl: " + (airlock.AirlockSensor.LastDetectedEntity != null ? "FOUND" : "NONE"));
                     var newState = state.Run(argument, Runtime.TimeSinceLastRun);
-                    Echo("New State: " + newState.Name);
                     if (newState != state)
                     {
                         state.ExitState();
                         newState.EnterState();
-                        Airlocks[airlock] = newState;
+                        airlock.CurrentState = newState;
                     }
                 }
                 else
