@@ -220,12 +220,8 @@ namespace mze9412.SEScripts.InventoryManager.Actions
             //get target index
             var targetIndex = GetIndexForItem(targetInventory, item.Content.TypeId.ToString(), item.Content.SubtypeId.ToString());
 
-            LCDHelper.WriteLine(DisplayId, "Transfer amount: " + amount);
-            LCDHelper.WriteLine(DisplayId, "Target index: " + targetIndex);
-
             //transfer item
             bool success = sourceInventory.TransferItemTo(targetInventory, itemIndex, targetIndex == -1 ? 0 : targetIndex, true, (VRage.MyFixedPoint)amount);
-            LCDHelper.WriteLine(DisplayId, "Transfer success: " + success);
         }
 
         /// <summary>

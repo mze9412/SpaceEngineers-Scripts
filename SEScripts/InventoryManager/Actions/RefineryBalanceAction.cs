@@ -19,7 +19,7 @@ namespace mze9412.SEScripts.InventoryManager.Actions
         /// </summary>
         /// <param name="gridProgram"></param>
         /// <param name="displayId"></param>
-        public RefineryBalanceAction(MyGridProgram gridProgram, string displayId) : base(gridProgram, displayId, "RefineryBalance")
+        public RefineryBalanceAction(MyGridProgram gridProgram, string displayId) : base(gridProgram, displayId, "Balance Refineries")
         {
             Refineries = new List<IMyRefinery>();
             OreSources = new List<IMyTerminalBlock>();

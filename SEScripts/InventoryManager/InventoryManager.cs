@@ -63,8 +63,11 @@ namespace mze9412.SEScripts.InventoryManager
             GridProgram.GridTerminalSystem.GetBlocksOfType<IMyTextPanel>(lcds, x => x.CubeGrid == GridProgram.Me.CubeGrid && x.CustomName == LcdName);
             if (lcds.Count > 0)
             {
-                LCDHelper.WriteLine(DisplayId, "Creating LCD");
-                LCDHelper.CreateDisplay(DisplayId, (IMyTextPanel)lcds[0]);
+                var ret = LCDHelper.CreateDisplay(DisplayId, (IMyTextPanel)lcds[0]);
+                if (ret == DisplayId)
+                {
+                    LCDHelper.WriteHeader(DisplayId, "Inventory Manager Instruction Counts");
+                }
             }
             else
             {
@@ -72,9 +75,9 @@ namespace mze9412.SEScripts.InventoryManager
             }
 
             //execute action and switch to next if finished
-            LCDHelper.WriteLine(DisplayId, "Running: " + CurrentAction.Value.Name);
             var finished = CurrentAction.Value.Run(argument);
-            LCDHelper.WriteLine(DisplayId, "Finished: " + finished);
+            var perc = (double)GridProgram.Runtime.CurrentInstructionCount / (double)GridProgram.Runtime.MaxInstructionCount;
+            LCDHelper.WriteLine(DisplayId, string.Format("{0} - {1:0.00}%", CurrentAction.Value.Name, perc*100));
             if (finished)
             {
                 CurrentAction = CurrentAction.Next;
@@ -83,16 +86,11 @@ namespace mze9412.SEScripts.InventoryManager
             //reset to first action
             if (CurrentAction == null)
             {
+                //print and delete LCD
+                LCDHelper.PrintDisplay(DisplayId);
+                LCDHelper.DeleteDisplay(DisplayId);
                 CurrentAction = Actions.First;
             }
-
-            //print instruction count percentage
-            var perc = (double) GridProgram.Runtime.CurrentInstructionCount/(double) GridProgram.Runtime.MaxInstructionCount;
-            LCDHelper.WriteProgressBar(DisplayId, "Instructions", perc);
-
-            //print and delete LCD
-            LCDHelper.PrintDisplay(DisplayId);
-            LCDHelper.DeleteDisplay(DisplayId);
         }
         
         /**End copy here**/

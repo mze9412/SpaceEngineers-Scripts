@@ -18,7 +18,7 @@ namespace mze9412.SEScripts.InventoryManager.Actions
         /// </summary>
         /// <param name="gridProgram"></param>
         /// <param name="displayId"></param>
-        public CollectFromConnectedGridsAction(MyGridProgram gridProgram, string displayId) : base(gridProgram, displayId, "CollectFromConnectedGrids")
+        public CollectFromConnectedGridsAction(MyGridProgram gridProgram, string displayId) : base(gridProgram, displayId, "Collect from Grids")
         {
             Connectors = new List<IMyShipConnector>();
         }

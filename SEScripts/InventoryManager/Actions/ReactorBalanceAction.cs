@@ -19,7 +19,7 @@ namespace mze9412.SEScripts.InventoryManager.Actions
         /// </summary>
         /// <param name="gridProgram"></param>
         /// <param name="displayId"></param>
-        public ReactorBalanceAction(MyGridProgram gridProgram, string displayId) : base(gridProgram, displayId, "ReactorBalance")
+        public ReactorBalanceAction(MyGridProgram gridProgram, string displayId) : base(gridProgram, displayId, "Balance Reactors")
         {
             Reactors = new List<IMyReactor>();
             IngotsSources = new List<IMyTerminalBlock>();
@@ -67,8 +67,6 @@ namespace mze9412.SEScripts.InventoryManager.Actions
                 bool abortScript;
                 if (GetUranium(out sourceInventory, out itemIndex, out abortScript))
                 {
-                    LCDHelper.WriteLine(DisplayId, "Uranium found in some cargo.");
-
                     //check all generators
                     foreach (var reactor in Reactors)
                     {
@@ -91,13 +89,10 @@ namespace mze9412.SEScripts.InventoryManager.Actions
                             }
                         }
 
-                        LCDHelper.WriteLine(DisplayId, "Uranium in reactor: " + uraniumFound);
-
                         //try to fill and end loop
                         if (uraniumFound < 25)
                         {
                             var amount = Math.Min((decimal)sourceInventory.GetItems()[itemIndex].Amount, 30 - uraniumFound);
-                            LCDHelper.WriteLine(DisplayId, "Transfering: " + amount);
                             TransferItem(sourceInventory, reactor.GetInventory(0), itemIndex, amount);
 
                             //finished for now
@@ -134,9 +129,6 @@ namespace mze9412.SEScripts.InventoryManager.Actions
             {
                 GridProgram.GridTerminalSystem.GetBlocksOfType<IMyTerminalBlock>(IngotsSources, x => x.CubeGrid == GridProgram.Me.CubeGrid && x.CustomName.Contains(InventoryManagerConfig.IngotsContainerTag));
             }
-
-
-            LCDHelper.WriteLine(DisplayId, "Ingot sources count: " + IngotsSources.Count);
 
             //check all sources
             foreach (var source in IngotsSources)

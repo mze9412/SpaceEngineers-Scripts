@@ -39,8 +39,12 @@ namespace mze9412.SEScripts.Libraries
         /// <returns></returns>
         public static string CreateDisplay(string displayId, IMyTextPanel lcd)
         {
-            displays.Add(displayId, new Display {Id = displayId, LCD = lcd, Builder = new StringBuilder()});
-            return displayId;
+            if (!displays.ContainsKey(displayId))
+            {
+                displays.Add(displayId, new Display {Id = displayId, LCD = lcd, Builder = new StringBuilder()});
+                return displayId;
+            }
+            return null;
         }
 
         /// <summary>

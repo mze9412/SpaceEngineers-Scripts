@@ -17,7 +17,7 @@ namespace mze9412.SEScripts.InventoryManager.Actions
         /// </summary>
         /// <param name="gridProgram"></param>
         /// <param name="displayId"></param>
-        public CollectItemsAction(MyGridProgram gridProgram, string displayId) : base(gridProgram, displayId, "CollectItems")
+        public CollectItemsAction(MyGridProgram gridProgram, string displayId) : base(gridProgram, displayId, "Collect Items")
         {
             Sources = new List<IMyTerminalBlock>();
         }
@@ -50,9 +50,7 @@ namespace mze9412.SEScripts.InventoryManager.Actions
                     Sources.Clear();
                     return false;
                 }
-
-                LCDHelper.WriteLine(DisplayId, "Collecting from source " + source.CustomName);
-
+                
                 //assemblers and refineries are only emptied from their second output inventory
                 var inventoryIndex = 0;
                 if (source is IMyAssembler || source is IMyRefinery)
@@ -81,11 +79,8 @@ namespace mze9412.SEScripts.InventoryManager.Actions
                         continue;
                     }
 
-                    LCDHelper.WriteLine(DisplayId, "Collecting item " + item.Content.TypeId + "///" + item.Content.SubtypeId);
-
                     //find cargo target and transfer
                     var target = GetTargetForItem(sourceInventory, type);
-                    LCDHelper.WriteLine(DisplayId, "Target: " + (target == null ? "None" : target.CustomName));
                     if (target != null)
                     {
                         TransferItem(sourceInventory, target.GetInventory(0), i);

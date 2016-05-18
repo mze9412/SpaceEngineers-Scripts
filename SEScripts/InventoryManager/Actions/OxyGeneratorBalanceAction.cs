@@ -19,7 +19,7 @@ namespace mze9412.SEScripts.InventoryManager.Actions
         /// </summary>
         /// <param name="gridProgram"></param>
         /// <param name="displayId"></param>
-        public OxyGeneratorBalanceAction(MyGridProgram gridProgram, string displayId) : base(gridProgram, displayId, "OxyGeneratorBalance")
+        public OxyGeneratorBalanceAction(MyGridProgram gridProgram, string displayId) : base(gridProgram, displayId, "Balance OxyGenerators")
         {
             Generators = new List<IMyOxygenGenerator>();
             OreSources = new List<IMyTerminalBlock>();
