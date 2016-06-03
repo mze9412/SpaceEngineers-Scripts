@@ -87,6 +87,16 @@ namespace mze9412.SEScripts.Libraries
             return typeId.EndsWith("_Ore") && subTypeId == "Ice";
         }
 
+        public static bool IsGatlingAmmo(string typeId, string subTypeId)
+        {
+            return typeId.EndsWith("_AmmoMagazine") && subTypeId == "NATO_25x184mm";
+        }
+
+        public static bool IsMissileAmmo(string typeId, string subTypeId)
+        {
+            return typeId.EndsWith("_AmmoMagazine") && subTypeId == "Missile200mm";
+        }
+
         public static bool IsUranium(string typeId, string subTypeId)
         {
             return typeId.EndsWith("_Ingot") && subTypeId == "Uranium";

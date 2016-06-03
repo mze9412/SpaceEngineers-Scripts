@@ -71,7 +71,7 @@ namespace mze9412.SEScripts.InventoryManager.Actions
                     foreach (var gen in Generators)
                     {
                         //if one generator is broken, throw out all and redo next run
-                        if (!gen.IsWorking || !gen.IsFunctional)
+                        if (!gen.IsFunctional)
                         {
                             Generators.Clear();
                             return false;
@@ -134,7 +134,7 @@ namespace mze9412.SEScripts.InventoryManager.Actions
             foreach (var source in OreSources)
             {
                 //if one source is broken, throw out all and redo next run
-                if (!source.IsWorking || !source.IsFunctional)
+                if (!source.IsFunctional)
                 {
                     OreSources.Clear();
                     abortScript = true;

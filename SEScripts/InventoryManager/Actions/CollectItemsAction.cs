@@ -45,7 +45,7 @@ namespace mze9412.SEScripts.InventoryManager.Actions
             foreach (var source in Sources)
             {
                 //if one source is broken, throw out all and redo next run
-                if (!source.IsWorking || !source.IsFunctional)
+                if (!source.IsFunctional)
                 {
                     Sources.Clear();
                     return false;

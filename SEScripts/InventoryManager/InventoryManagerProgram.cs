@@ -17,6 +17,7 @@ namespace mze9412.SEScripts.InventoryManager
             InventoryManagerConfig.ManageReactors           = true;
             InventoryManagerConfig.ManageOxygenGenerators   = true;
             InventoryManagerConfig.PullFromAttachedGrids    = true;
+            InventoryManagerConfig.ManageLargeTurretAmmo    = true;
             InventoryManagerConfig.OreContainerTag          = "[Ore]";
             InventoryManagerConfig.IngotsContainerTag       = "[Ingots]";
             InventoryManagerConfig.ComponentsContainerTag   = "[Components]";
@@ -61,6 +62,7 @@ namespace mze9412.SEScripts.InventoryManager
         //#include(Actions/RefineryBalanceAction.cs,false)
         //#include(Actions/OxyGeneratorBalanceAction.cs,false)
         //#include(Actions/ReactorBalanceAction.cs,false)
+        //#include(Actions/AmmoBalanceAction.cs,false)
         //#include(../Libraries/LCDHelper.cs,false)
         //#include(../Libraries/ItemIdHelper.cs,false)
         //#include(InventoryManager.cs,false)

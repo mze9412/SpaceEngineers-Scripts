@@ -70,7 +70,7 @@ namespace mze9412.SEScripts.InventoryManager.Actions
                     foreach (var r in Refineries)
                     {
                         //if one refinery is broken, throw out all and redo next run
-                        if (!r.IsWorking || !r.IsFunctional)
+                        if (!r.IsFunctional)
                         {
                             Refineries.Clear();
                             return false;
@@ -122,7 +122,7 @@ namespace mze9412.SEScripts.InventoryManager.Actions
             foreach (var source in OreSources)
             {
                 //if one source is broken, throw out all and redo next run
-                if (!source.IsWorking || !source.IsFunctional)
+                if (!source.IsFunctional)
                 {
                     OreSources.Clear();
                     abortScript = true;

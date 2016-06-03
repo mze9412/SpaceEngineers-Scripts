@@ -24,6 +24,7 @@ namespace mze9412.SEScripts.InventoryManager
             Actions.AddLast(new RefineryBalanceAction(GridProgram, DisplayId));
             Actions.AddLast(new OxyGeneratorBalanceAction(GridProgram, DisplayId));
             Actions.AddLast(new ReactorBalanceAction(GridProgram, DisplayId));
+            Actions.AddLast(new AmmoBalanceAction(GridProgram, DisplayId));
 
             CurrentAction = Actions.First;
         }
@@ -58,6 +59,8 @@ namespace mze9412.SEScripts.InventoryManager
         /// <param name="argument"></param>
         public void Run(string argument)
         {
+            GridProgram.Echo("Script is alive: " + DateTime.Now);
+
             //create LCD
             var lcds = new List<IMyTerminalBlock>(10);
             GridProgram.GridTerminalSystem.GetBlocksOfType<IMyTextPanel>(lcds, x => x.CubeGrid == GridProgram.Me.CubeGrid && x.CustomName == LcdName);
@@ -66,7 +69,7 @@ namespace mze9412.SEScripts.InventoryManager
                 var ret = LCDHelper.CreateDisplay(DisplayId, (IMyTextPanel)lcds[0]);
                 if (ret == DisplayId)
                 {
-                    LCDHelper.WriteHeader(DisplayId, "Inventory Manager Instruction Counts");
+                    LCDHelper.WriteHeader(DisplayId, "InvMan Instruction Count (" + DateTime.Now.ToShortTimeString() + ")");
                 }
             }
             else

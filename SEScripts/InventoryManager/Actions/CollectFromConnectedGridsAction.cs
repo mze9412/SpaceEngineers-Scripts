@@ -34,50 +34,52 @@ namespace mze9412.SEScripts.InventoryManager.Actions
         /// <param name="argument"></param>
         protected override bool RunCore(string argument)
         {
-            //get connectors if none cached
-            if (Connectors.Count == 0)
+            if (InventoryManagerConfig.PullFromAttachedGrids)
             {
-                //get all own connectors from own grid
-                var connectors = new List<IMyTerminalBlock>(25);
-                GridProgram.GridTerminalSystem.GetBlocksOfType<IMyShipConnector>(connectors, x => x.CubeGrid == GridProgram.Me.CubeGrid);
-
-                //cast them to correct type and add to cache
-                foreach (var conn in connectors)
+                //get connectors if none cached
+                if (Connectors.Count == 0)
                 {
-                    Connectors.Add((IMyShipConnector)conn);
-                }
-            }
+                    //get all own connectors from own grid
+                    var connectors = new List<IMyTerminalBlock>(25);
+                    GridProgram.GridTerminalSystem.GetBlocksOfType<IMyShipConnector>(connectors, x => x.CubeGrid == GridProgram.Me.CubeGrid);
 
-            //check all for connections
-            foreach (var conn in Connectors)
-            {
-                //if one connector is broken, throw out all and redo next run
-                if (!conn.IsWorking || !conn.IsFunctional)
-                {
-                    Connectors.Clear();
-                    return false;
+                    //cast them to correct type and add to cache
+                    foreach (var conn in connectors)
+                    {
+                        Connectors.Add((IMyShipConnector) conn);
+                    }
                 }
 
-                //get connected connector and continue if ignore tag is not set, ignore connected grid if connector has ignore tag
-                var connectedConnector = conn.OtherConnector;
-                if (connectedConnector != null && !connectedConnector.CustomName.Contains(InventoryManagerConfig.IgnoreContainerTag))
+                //check all for connections
+                foreach (var conn in Connectors)
                 {
-                    var allDone = EmptyGrid(connectedConnector);
+                    //if one connector is broken, throw out all and redo next run
+                    if (!conn.IsFunctional)
+                    {
+                        Connectors.Clear();
+                        return false;
+                    }
 
-                    //we did not finish the grid because instruction limit reached -> abort
-                    if (!allDone)
+                    //get connected connector and continue if ignore tag is not set, ignore connected grid if connector has ignore tag
+                    var connectedConnector = conn.OtherConnector;
+                    if (connectedConnector != null && !connectedConnector.CustomName.Contains(InventoryManagerConfig.IgnoreContainerTag))
+                    {
+                        var allDone = EmptyGrid(connectedConnector);
+
+                        //we did not finish the grid because instruction limit reached -> abort
+                        if (!allDone)
+                        {
+                            return false;
+                        }
+                    }
+
+                    //cancel if too close to instruction count
+                    if (!CanContinueRun)
                     {
                         return false;
                     }
                 }
-
-                //cancel if too close to instruction count
-                if (!CanContinueRun)
-                {
-                    return false;
-                }
             }
-
             //all done
             return true;
         }

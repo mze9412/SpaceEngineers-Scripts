@@ -15,11 +15,16 @@
         /// Try to keep all refineries busy
         /// </summary>
         public static bool ManageRefineries { get; set; }
-        
+
         /// <summary>
         /// Try to keep oxygen generators running
         /// </summary>
         public static bool ManageOxygenGenerators { get; set; }
+
+        /// <summary>
+        /// Manage ammo in large turrets
+        /// </summary>
+        public static bool ManageLargeTurretAmmo { get; set; }
 
         /// <summary>
         /// Makes sure to keep reactors on 10 ingots maximum, keepts rest in containers

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using mze9412.SEScripts.Libraries;
 using Sandbox.ModAPI.Ingame;
 using VRage.Game.ModAPI.Ingame;
 
@@ -218,38 +217,29 @@ namespace mze9412.SEScripts.InventoryManager.Actions
             
 
             //get target index
-            var targetIndex = GetIndexForItem(targetInventory, item.Content.TypeId.ToString(), item.Content.SubtypeId.ToString());
+            //var targetIndex = GetIndexForItem(targetInventory, item.Content.TypeId.ToString(), item.Content.SubtypeId.ToString());
 
             //transfer item
-            bool success = sourceInventory.TransferItemTo(targetInventory, itemIndex, targetIndex == -1 ? 0 : targetIndex, true, (VRage.MyFixedPoint)amount);
+            sourceInventory.TransferItemTo(targetInventory, itemIndex, null, true, (VRage.MyFixedPoint)amount);
         }
 
-        /// <summary>
-        /// Returns index in inventory for item with given type and subtype
-        /// 
-        /// index -1 if not found
-        /// </summary>
-        /// <param name="inventory"></param>
-        /// <param name="typeId"></param>
-        /// <param name="subtypeId"></param>
-        /// <returns></returns>
-        protected int GetIndexForItem(IMyInventory inventory, string typeId, string subtypeId)
-        {
-            var index = 0;
+        //protected int GetIndexForItem(IMyInventory inventory, string typeId, string subtypeId)
+        //{
+        //    var index = 0;
 
-            var items = inventory.GetItems();
-            for (int i = 0; i < items.Count; i++)
-            {
-                var item = items[i];
-                if (item.Content.TypeId.ToString() == typeId && item.Content.SubtypeId.ToString() == subtypeId)
-                {
-                    index = i;
-                    break;
-                }
-            }
+        //    var items = inventory.GetItems();
+        //    for (int i = 0; i < items.Count; i++)
+        //    {
+        //        var item = items[i];
+        //        if (item.Content.TypeId.ToString() == typeId && item.Content.SubtypeId.ToString() == subtypeId)
+        //        {
+        //            index = i;
+        //            break;
+        //        }
+        //    }
 
-            return index;
-        }
+        //    return index;
+        //}
 
         #endregion
 

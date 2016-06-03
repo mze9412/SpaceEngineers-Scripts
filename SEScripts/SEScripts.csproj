@@ -68,6 +68,7 @@
     <Compile Include="Airlock\States\AirlockStatePressurizing.cs" />
     <Compile Include="CargoState\CargoStateProgram.cs" />
     <Compile Include="DistanceWarning\DistanceWarningProgram.cs" />
+    <Compile Include="InventoryManager\Actions\AmmoBalanceAction.cs" />
     <Compile Include="InventoryManager\Actions\CollectFromConnectedGridsAction.cs" />
     <Compile Include="InventoryManager\Actions\CollectItemsAction.cs" />
     <Compile Include="InventoryManager\Actions\ReactorBalanceAction.cs" />

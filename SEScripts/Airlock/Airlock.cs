@@ -124,7 +124,7 @@ namespace mze9412.SEScripts.Airlock
         /// <returns></returns>
         private bool IsIntactBlock(IMyTerminalBlock block)
         {
-            return block != null && block.IsWorking && block.IsFunctional;
+            return block != null && block.IsFunctional;
         }
 
 
