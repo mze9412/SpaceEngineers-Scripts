@@ -8,7 +8,7 @@
         xmlns:properties="clr-namespace:mze9412.ScriptCompiler.Properties"
         mc:Ignorable="d"
         Title="{x:Static properties:Resources.Application_Name}"
-        MinHeight="350" MinWidth="350" Height="350" Width="350">
+        MinHeight="800" MinWidth="675" Height="350" Width="350">
     <Grid Margin="5" DataContext="{Binding ., RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type scriptCompiler:MainWindow}}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

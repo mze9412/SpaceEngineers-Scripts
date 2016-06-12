@@ -58,5 +58,17 @@ namespace mze9412.ScriptCompiler.Properties {
                 this["CopyScriptToClipboard"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoRefreshScripts {
+            get {
+                return ((bool)(this["AutoRefreshScripts"]));
+            }
+            set {
+                this["AutoRefreshScripts"] = value;
+            }
+        }
     }
 }

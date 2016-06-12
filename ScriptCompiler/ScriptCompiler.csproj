@@ -61,6 +61,7 @@
     <Compile Include="Domain\Script.cs" />
     <Compile Include="Helpers\ClipCopy.cs" />
     <Compile Include="Helpers\DelegateCommand.cs" />
+    <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="ViewModels\DetectedScriptsViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Views\DetectedScriptControl.xaml.cs">

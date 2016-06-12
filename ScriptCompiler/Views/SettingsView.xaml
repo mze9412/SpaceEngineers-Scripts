@@ -35,5 +35,9 @@
         
         <!-- Copy to clipboard -->
         <CheckBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="5 5 0 0" IsChecked="{Binding CopyScriptToClipboard}" Content="{x:Static p:Resources.CopyScriptToClipboard_Title}" ToolTip="{x:Static p:Resources.CopyScriptToClipboard_Tooltip}" />
+
+        <!-- Auto refresh -->
+        <CheckBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Margin="5 5 0 0" IsChecked="{Binding AutoRefreshScripts}" Content="{x:Static p:Resources.AutoRefreshScripts_Title}" ToolTip="{x:Static p:Resources.CopyScriptToClipboard_Tooltip}" />
+
     </Grid>
 </UserControl>

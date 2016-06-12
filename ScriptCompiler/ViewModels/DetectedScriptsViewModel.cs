@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using mze9412.ScriptCompiler.Domain;
@@ -20,6 +21,8 @@ namespace mze9412.ScriptCompiler.ViewModels
 
         public const string InfoFileName = "ScriptInfo.txt";
 
+        private Timer autoRefreshTimer;
+
         /// <summary>
         /// Ctor
         /// </summary>
@@ -31,6 +34,12 @@ namespace mze9412.ScriptCompiler.ViewModels
             CompileCommand = new DelegateCommand(Compile);
             CompileAllCommand = new DelegateCommand(CompileAll);
             RefreshScriptsCommand = new DelegateCommand(RefreshScripts);
+
+            autoRefreshTimer = new Timer();
+            autoRefreshTimer.AutoReset = true;
+            autoRefreshTimer.Interval = 5000;
+            autoRefreshTimer.Elapsed += OnAutoRefreshTimerElapsed;
+            autoRefreshTimer.Start();
         }
 
         /// <summary>
@@ -122,6 +131,14 @@ namespace mze9412.ScriptCompiler.ViewModels
                         DetectedScripts.Add(script);
                     }
                 }
+            }
+        }
+
+        private void OnAutoRefreshTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            if (settingsViewModel.AutoRefreshScripts)
+            {
+                UIHelper.UIInvoke(() => {RefreshScripts(null);});
             }
         }
 

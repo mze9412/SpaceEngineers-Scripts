@@ -120,6 +120,9 @@
   <data name="Application_Name" xml:space="preserve">
     <value>Space Engineers Script compiler (by mze9412)</value>
   </data>
+  <data name="AutoRefreshScripts_Title" xml:space="preserve">
+    <value>Auto refresh scripts</value>
+  </data>
   <data name="CopyScriptToClipboard_Title" xml:space="preserve">
     <value>Copy script to clipboard</value>
   </data>
@@ -134,6 +137,15 @@
   </data>
   <data name="DetectedScripts_Title" xml:space="preserve">
     <value>Detected scripts</value>
+  </data>
+  <data name="DetectedScript_CompiledHash" xml:space="preserve">
+    <value>Compiled hash:</value>
+  </data>
+  <data name="DetectedScript_CurrentHash" xml:space="preserve">
+    <value>Current hash:</value>
+  </data>
+  <data name="DetectedScript_LastCompile" xml:space="preserve">
+    <value>Last compiled:</value>
   </data>
   <data name="ScriptCodeDirectory_Title" xml:space="preserve">
     <value>Scripts Directory</value>

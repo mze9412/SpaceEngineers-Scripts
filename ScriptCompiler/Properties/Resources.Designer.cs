@@ -70,6 +70,15 @@ namespace mze9412.ScriptCompiler.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Auto refresh scripts.
+        /// </summary>
+        public static string AutoRefreshScripts_Title {
+            get {
+                return ResourceManager.GetString("AutoRefreshScripts_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copy script to clipboard.
         /// </summary>
         public static string CopyScriptToClipboard_Title {
@@ -84,6 +93,33 @@ namespace mze9412.ScriptCompiler.Properties {
         public static string CopyScriptToClipboard_Tooltip {
             get {
                 return ResourceManager.GetString("CopyScriptToClipboard_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compiled hash:.
+        /// </summary>
+        public static string DetectedScript_CompiledHash {
+            get {
+                return ResourceManager.GetString("DetectedScript_CompiledHash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current hash:.
+        /// </summary>
+        public static string DetectedScript_CurrentHash {
+            get {
+                return ResourceManager.GetString("DetectedScript_CurrentHash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last compiled:.
+        /// </summary>
+        public static string DetectedScript_LastCompile {
+            get {
+                return ResourceManager.GetString("DetectedScript_LastCompile", resourceCulture);
             }
         }
         

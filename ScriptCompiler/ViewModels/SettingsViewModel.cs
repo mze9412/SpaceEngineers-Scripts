@@ -15,6 +15,7 @@ namespace mze9412.ScriptCompiler.ViewModels
         private string _scriptCodeDirectory;
         private string _scriptOutputDirectory;
         private bool _copyScriptToClipboard;
+        private bool _autoRefreshScripts;
 
         /// <summary>
         /// Ctor
@@ -24,6 +25,7 @@ namespace mze9412.ScriptCompiler.ViewModels
             ScriptCodeDirectory = Settings.Default.ScriptCodeDirectory;
             ScriptOutputDirectory = Settings.Default.ScriptOutputDirectory;
             CopyScriptToClipboard = Settings.Default.CopyScriptToClipboard;
+            AutoRefreshScripts = Settings.Default.AutoRefreshScripts;
 
             SelectDirectoryCommand = new DelegateCommand(SelectDirectory);
         }
@@ -68,6 +70,21 @@ namespace mze9412.ScriptCompiler.ViewModels
             {
                 _copyScriptToClipboard = value;
                 Settings.Default.CopyScriptToClipboard = value;
+                Settings.Default.Save();
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// If true, refresh is triggered automatically
+        /// </summary>
+        public bool AutoRefreshScripts
+        {
+            get { return _autoRefreshScripts; }
+            set
+            {
+                _autoRefreshScripts = value;
+                Settings.Default.AutoRefreshScripts = value;
                 Settings.Default.Save();
                 RaisePropertyChanged();
             }
