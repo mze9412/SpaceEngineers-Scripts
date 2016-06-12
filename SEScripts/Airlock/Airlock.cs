@@ -1,4 +1,5 @@
-﻿using mze9412.SEScripts.Airlock.States;
+﻿using System.Collections.Generic;
+using mze9412.SEScripts.Airlock.States;
 using Sandbox.ModAPI.Ingame;
 using SpaceEngineers.Game.ModAPI.Ingame;
 
@@ -22,13 +23,46 @@ namespace mze9412.SEScripts.Airlock
         /// <param name="gridProgram"></param>
         public Airlock(int airlockIndex, MyGridProgram gridProgram)
         {
+            var blocks = new List<IMyTerminalBlock>(1);
+
             AirlockIndex = airlockIndex;
-            InternalSensor = (IMySensorBlock)gridProgram.GridTerminalSystem.GetBlockWithName(string.Format(AirlockInternalSensorPattern, AirlockIndex));
-            ExternalSensor = (IMySensorBlock)gridProgram.GridTerminalSystem.GetBlockWithName(string.Format(AirlockExternalSensorPattern, AirlockIndex));
-            AirlockSensor = (IMySensorBlock)gridProgram.GridTerminalSystem.GetBlockWithName(string.Format(AirlockSensorPattern, AirlockIndex));
-            InternalDoor = (IMyDoor)gridProgram.GridTerminalSystem.GetBlockWithName(string.Format(AirlockInternalDoorPattern, AirlockIndex));
-            ExternalDoor = (IMyDoor)gridProgram.GridTerminalSystem.GetBlockWithName(string.Format(AirlockExternalDoorPattern, AirlockIndex));
-            AirVent = (IMyAirVent)gridProgram.GridTerminalSystem.GetBlockWithName(string.Format(AirlockAirVentPattern, AirlockIndex));
+
+            //internal sensor
+            gridProgram.GridTerminalSystem.GetBlocksOfType<IMySensorBlock>(blocks, x => x.CubeGrid == gridProgram.Me.CubeGrid && x.CustomName == string.Format(AirlockInternalSensorPattern, AirlockIndex));
+            if (blocks.Count == 1)
+            {
+                InternalSensor = (IMySensorBlock)blocks[0];
+            }
+            //external sensor
+            gridProgram.GridTerminalSystem.GetBlocksOfType<IMySensorBlock>(blocks, x => x.CubeGrid == gridProgram.Me.CubeGrid && x.CustomName == string.Format(AirlockExternalSensorPattern, AirlockIndex));
+            if (blocks.Count == 1)
+            {
+                ExternalSensor = (IMySensorBlock)blocks[0];
+            }
+            //airlock sensor
+            gridProgram.GridTerminalSystem.GetBlocksOfType<IMySensorBlock>(blocks, x => x.CubeGrid == gridProgram.Me.CubeGrid && x.CustomName == string.Format(AirlockSensorPattern, AirlockIndex));
+            if (blocks.Count == 1)
+            {
+                AirlockSensor = (IMySensorBlock)blocks[0];
+            }
+            //internal door
+            gridProgram.GridTerminalSystem.GetBlocksOfType<IMyDoor>(blocks, x => x.CubeGrid == gridProgram.Me.CubeGrid && x.CustomName == string.Format(AirlockInternalDoorPattern, AirlockIndex));
+            if (blocks.Count == 1)
+            {
+                InternalDoor = (IMyDoor)blocks[0];
+            }
+            //external door
+            gridProgram.GridTerminalSystem.GetBlocksOfType<IMyDoor>(blocks, x => x.CubeGrid == gridProgram.Me.CubeGrid && x.CustomName == string.Format(AirlockExternalDoorPattern, AirlockIndex));
+            if (blocks.Count == 1)
+            {
+                ExternalDoor = (IMyDoor)blocks[0];
+            }
+            //vent
+            gridProgram.GridTerminalSystem.GetBlocksOfType<IMyAirVent>(blocks, x => x.CubeGrid == gridProgram.Me.CubeGrid && x.CustomName == string.Format(AirlockAirVentPattern, AirlockIndex));
+            if (blocks.Count == 1)
+            {
+                AirVent = (IMyAirVent)blocks[0];
+            }
         }
 
         public int AirlockIndex { get; private set; }
