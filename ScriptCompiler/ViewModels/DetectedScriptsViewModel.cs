@@ -64,12 +64,12 @@ namespace mze9412.ScriptCompiler.ViewModels
             var script = argument as Script;
             if (script != null)
             {
-                var result = new StringBuilder();
-                ClipCopy.Includefile(result, script.ScriptFile, false, -1, true);
-
+                var parser = new ClipCopy.Parser(script.ScriptFile, false, -1, true);
+                var res = parser.Parse();
+                
                 if (settingsViewModel.CopyScriptToClipboard)
                 {
-                    Clipboard.SetText(result.ToString());
+                    Clipboard.SetText(res);
                 }
 
                 var outDir = Path.Combine(settingsViewModel.ScriptOutputDirectory, script.Name);
@@ -77,12 +77,12 @@ namespace mze9412.ScriptCompiler.ViewModels
                 {
                     Directory.CreateDirectory(outDir);
                 }
-                var hash = result.ToString().GetHashCode().ToString();
+                var hash = res.GetHashCode().ToString();
                 script.LastCompileHash = hash;
                 script.CurrentHash = hash;
                 script.LastCompile = DateTime.Now;
 
-                File.WriteAllText(Path.Combine(outDir, script.Name + ".cs"), result.ToString());
+                File.WriteAllText(Path.Combine(outDir, script.Name + ".cs"), res);
                 File.WriteAllLines(Path.Combine(outDir, InfoFileName), new [] {script.Name, script.LastCompile.ToString(), script.LastCompileHash});
             }
         }
@@ -125,9 +125,9 @@ namespace mze9412.ScriptCompiler.ViewModels
                             script.LastCompileHash = lines[2];
                         }
                         
-                        var result = new StringBuilder();
-                        ClipCopy.Includefile(result, script.ScriptFile, false, -1, true);
-                        script.CurrentHash = result.ToString().GetHashCode().ToString();
+                        var parser = new ClipCopy.Parser(script.ScriptFile, false, -1, true);
+                        var res = parser.Parse();
+                        script.CurrentHash = res.GetHashCode().ToString();
                         DetectedScripts.Add(script);
                     }
                 }
