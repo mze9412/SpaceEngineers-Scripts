@@ -164,6 +164,6 @@ namespace mze9412.SEScripts.InventoryManager.Actions
             return false;
         }
 
-        /**End copy here**/
     }
+    /**End copy here**/
 }

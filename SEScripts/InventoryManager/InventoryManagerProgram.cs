@@ -6,23 +6,23 @@ namespace mze9412.SEScripts.InventoryManager
     public sealed class InventoryManagerProgram : MyGridProgram
     {
         /**Begin copy here**/
-            
+
         public InventoryManagerProgram() //#replace(InventoryManagerProgram,Program)
         {
             TimeSinceLastRun = new TimeSpan();
             Manager = new InventoryManager(this);
 
             //configure script
-            InventoryManagerConfig.ManageRefineries         = true;
-            InventoryManagerConfig.ManageReactors           = true;
-            InventoryManagerConfig.ManageOxygenGenerators   = true;
-            InventoryManagerConfig.PullFromAttachedGrids    = true;
-            InventoryManagerConfig.ManageLargeTurretAmmo    = true;
-            InventoryManagerConfig.OreContainerTag          = "[Ore]";
-            InventoryManagerConfig.IngotsContainerTag       = "[Ingots]";
-            InventoryManagerConfig.ComponentsContainerTag   = "[Components]";
-            InventoryManagerConfig.IgnoreContainerTag       = "[Ignore]";
-            InventoryManagerConfig.MiscContainerTag         = "[Misc]";
+            InventoryManagerConfig.ManageRefineries = true;
+            InventoryManagerConfig.ManageReactors = true;
+            InventoryManagerConfig.ManageOxygenGenerators = true;
+            InventoryManagerConfig.PullFromAttachedGrids = true;
+            InventoryManagerConfig.ManageLargeTurretAmmo = true;
+            InventoryManagerConfig.OreContainerTag = "[Ore]";
+            InventoryManagerConfig.IngotsContainerTag = "[Ingots]";
+            InventoryManagerConfig.ComponentsContainerTag = "[Components]";
+            InventoryManagerConfig.IgnoreContainerTag = "[Ignore]";
+            InventoryManagerConfig.MiscContainerTag = "[Misc]";
         }
 
         #region Properties
@@ -55,6 +55,7 @@ namespace mze9412.SEScripts.InventoryManager
             Manager.Run(argument);
         }
 
+        //#include(InventoryManager.cs,false)
         //#include(InventoryManagerConfig.cs,false)
         //#include(Actions/InventoryManagerAction.cs,false)
         //#include(Actions/CollectFromConnectedGridsAction.cs,false)
@@ -65,8 +66,7 @@ namespace mze9412.SEScripts.InventoryManager
         //#include(Actions/AmmoBalanceAction.cs,false)
         //#include(../Libraries/LCDHelper.cs,false)
         //#include(../Libraries/ItemIdHelper.cs,false)
-        //#include(InventoryManager.cs,false)
-
-        /**End copy here**/
     }
+
+    /**End copy here**/
 }

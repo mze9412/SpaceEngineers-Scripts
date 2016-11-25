@@ -13,14 +13,13 @@ namespace mze9412.SEScripts.ItemId
             var items = new List<string>();
 
             var blocks = new List<IMyTerminalBlock>();
-            GridTerminalSystem.GetBlocksOfType<IMyTerminalBlock>(blocks, x => x is IMyInventoryOwner);
+            GridTerminalSystem.GetBlocksOfType<IMyTerminalBlock>(blocks, x => x.HasInventory());
 
             foreach (var block in blocks)
             {
-                var b = (IMyInventoryOwner) block;
-                for (int i = 0; i < b.InventoryCount; i++)
+                for (int i = 0; i < block.GetInventoryCount(); i++)
                 {
-                    var inv = b.GetInventory(i);
+                    var inv = block.GetInventory(i);
                     foreach (var item in inv.GetItems())
                     {
                         var id = item.Content.TypeId + " // " + item.Content.SubtypeId + " // " + item.Content.SubtypeName;

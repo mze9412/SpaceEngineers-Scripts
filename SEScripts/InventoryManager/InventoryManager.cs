@@ -32,7 +32,7 @@ namespace mze9412.SEScripts.InventoryManager
         #region Properties
 
         private const string DisplayId = "D67FEC05-0720-4C9F-89FE-634B9F73F17F";
-        private const string LcdName = "LCD_Inventory";
+        private const string LcdName = "LCD PB3 (InvMan)";
 
         private MyGridProgram GridProgram { get; set; }
         
@@ -95,7 +95,7 @@ namespace mze9412.SEScripts.InventoryManager
                 CurrentAction = Actions.First;
             }
         }
-        
-        /**End copy here**/
     }
+
+    /**End copy here**/
 }

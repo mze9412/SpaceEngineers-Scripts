@@ -226,6 +226,6 @@ namespace mze9412.SEScripts.InventoryManager.Actions
             itemIndex = -1;
             return false;
         }
-        /**End copy here**/
     }
+    /**End copy here**/
 }

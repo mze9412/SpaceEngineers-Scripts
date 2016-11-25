@@ -67,12 +67,14 @@ namespace mze9412.SEScripts.CargoState
                 var totalMass = 0f;
                 foreach (var cargo in cargos)
                 {
-                    var owner = cargo as IMyInventoryOwner;
+                    var owner = cargo;
+                    if (owner.HasInventory())
+                    {
+                        totalVolume += owner.GetInventory(0).CurrentVolume.RawValue;
+                        maxVolume += owner.GetInventory(0).MaxVolume.RawValue;
 
-                    totalVolume += owner.GetInventory(0).CurrentVolume.RawValue;
-                    maxVolume += owner.GetInventory(0).MaxVolume.RawValue;
-
-                    totalMass += owner.GetInventory(0).CurrentMass.RawValue;
+                        totalMass += owner.GetInventory(0).CurrentMass.RawValue;
+                    }
                 }
                 var percentFilled = totalVolume / maxVolume;
 

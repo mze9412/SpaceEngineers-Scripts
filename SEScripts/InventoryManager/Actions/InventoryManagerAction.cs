@@ -168,7 +168,7 @@ namespace mze9412.SEScripts.InventoryManager.Actions
 
             //get possible targets, must have 10% volume left and be connected to source inventory
             var targets = new List<IMyTerminalBlock>(25);
-            GridProgram.GridTerminalSystem.GetBlocksOfType<IMyTerminalBlock>(targets, x => x.CubeGrid == GridProgram.Me.CubeGrid && x is IMyInventoryOwner && x.CustomName.Contains(tag) && ((double)x.GetInventory(0).CurrentVolume / (double)x.GetInventory(0).MaxVolume < 0.9) && x.GetInventory(0).IsConnectedTo(sourceInventory));
+            GridProgram.GridTerminalSystem.GetBlocksOfType<IMyTerminalBlock>(targets, x => x.CubeGrid == GridProgram.Me.CubeGrid && x.HasInventory() && x.CustomName.Contains(tag) && ((double)x.GetInventory(0).CurrentVolume / (double)x.GetInventory(0).MaxVolume < 0.9) && x.GetInventory(0).IsConnectedTo(sourceInventory));
 
             //return first target and cache target
             if (targets.Count > 0)
@@ -245,6 +245,6 @@ namespace mze9412.SEScripts.InventoryManager.Actions
 
         #endregion
 
-        /**End copy here**/
     }
+    /**End copy here**/
 }

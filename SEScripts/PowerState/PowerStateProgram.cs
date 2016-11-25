@@ -12,7 +12,7 @@ namespace mze9412.SEScripts.PowerState
         /// <summary>
         /// Name of the LCD to print on
         /// </summary>
-        private static string LCDName = "LCD_PowerState";
+        private static string LCDName = "LCD PB4 (PowerState)";
 
         /// <summary>
         /// DO NOT MODIFY
@@ -152,16 +152,23 @@ namespace mze9412.SEScripts.PowerState
 
                 foreach (var solar in solars)
                 {
-                    var s = (IMySolarPanel)solar;
-                    
+                    var s = (IMySolarPanel) solar;
+
                     maxOutput += s.MaxOutput;
                     totalOutput += s.CurrentOutput;
                 }
                 var percentOutput = totalOutput / maxOutput;
 
                 //write to LCD
-                LCDHelper.WriteFormattedLine(DisplayId, "Output:  {0:0.00} / {1:0.00} MW", totalOutput);
-                LCDHelper.WriteProgressBar(DisplayId, "Output (5):", percentOutput);
+                if (double.IsNaN(percentOutput))
+                {
+                    LCDHelper.WriteLine(DisplayId, "--- No output. Probably night time. ---");
+                }
+                else
+                {
+                    LCDHelper.WriteFormattedLine(DisplayId, "Output:  {0:0.00} / {1:0.00} MW", totalOutput);
+                    LCDHelper.WriteProgressBar(DisplayId, "Output (%):", percentOutput);
+                }
             }
             else
             {
@@ -170,7 +177,6 @@ namespace mze9412.SEScripts.PowerState
         }
 
         //#include(../Libraries/LCDHelper.cs,false)
-
-        /**End copy here**/
     }
+    /**End copy here**/
 }

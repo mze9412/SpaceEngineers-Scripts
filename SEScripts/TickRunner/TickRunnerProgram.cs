@@ -11,7 +11,7 @@ namespace mze9412.SEScripts.TickRunner
         /// <summary>
         /// Name of the timer block
         /// </summary>
-        public const string TimerName = "Script_Timer_Tick";
+        public const string TimerName = "Timer - Tick";
 
         /// <summary>
         /// Counter for debugging (check if script is running)

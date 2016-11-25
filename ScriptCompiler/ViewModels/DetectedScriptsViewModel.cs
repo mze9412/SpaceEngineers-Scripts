@@ -124,11 +124,13 @@ namespace mze9412.ScriptCompiler.ViewModels
                             script.LastCompile = DateTime.Parse(lines[1]);
                             script.LastCompileHash = lines[2];
                         }
-                        
-                        var parser = new ClipCopy.Parser(script.ScriptFile, false, -1, true);
-                        var res = parser.Parse();
-                        script.CurrentHash = res.GetHashCode().ToString();
-                        DetectedScripts.Add(script);
+
+                        using (var parser = new ClipCopy.Parser(script.ScriptFile, false, -1, true))
+                        {
+                            var res = parser.Parse();
+                            script.CurrentHash = res.GetHashCode().ToString();
+                            DetectedScripts.Add(script);
+                        }
                     }
                 }
             }

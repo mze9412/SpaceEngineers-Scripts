@@ -57,7 +57,7 @@
         public static string MiscContainerTag { get; set; }
 
         #endregion
-
-        /**End copy here**/
     }
+
+    /**End copy here**/
 }

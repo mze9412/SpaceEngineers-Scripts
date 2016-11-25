@@ -27,7 +27,7 @@ namespace mze9412.SEScripts.Libraries
         /// <summary>
         /// Spacer char
         /// </summary>
-        public static char Spacer = '`';
+        public static char Spacer = ' ';
 
         #region Create / delete / print
 
@@ -121,13 +121,13 @@ namespace mze9412.SEScripts.Libraries
                 builder.Append(title.PadRight(15, Spacer));
                 builder.Append("[");
 
-                //we have 15 characters for progress bar
-                var usedChars = (int)Math.Round(30*progress, 0);
-                var restChars = 30 - usedChars;
+                //we have 10 characters for progress bar
+                var usedChars = (int)Math.Round(20*progress, 0);
+                var restChars = 20 - usedChars;
 
                 for (int i = 0; i < usedChars; i++)
                 {
-                    builder.Append("I");
+                    builder.Append("|");
                 }
                 for (int i = 0; i < restChars; i++)
                 {
@@ -176,7 +176,7 @@ namespace mze9412.SEScripts.Libraries
 
             public StringBuilder Builder { get; set; }
         }
-        /**End copy here**/
     }
+    /**End copy here**/
 
 }

@@ -93,7 +93,7 @@ namespace mze9412.SEScripts.InventoryManager.Actions
         {
             //get all blocks with inventories which are not a gun (i.e. turrets) and which do not use the Ignore keyworkd
             var sources = new List<IMyTerminalBlock>(100);
-            GridProgram.GridTerminalSystem.GetBlocksOfType<IMyTerminalBlock>(sources, x => x.CubeGrid == connectedConnector.CubeGrid && x is IMyInventoryOwner && !(x is IMyUserControllableGun || x is IMyReactor) && !x.CustomName.Contains(InventoryManagerConfig.IgnoreContainerTag));
+            GridProgram.GridTerminalSystem.GetBlocksOfType<IMyTerminalBlock>(sources, x => x.CubeGrid == connectedConnector.CubeGrid && x.HasInventory() && !(x is IMyUserControllableGun || x is IMyReactor) && !x.CustomName.Contains(InventoryManagerConfig.IgnoreContainerTag));
 
             //go through all blocks and empty them
             foreach (var source in sources)
@@ -135,6 +135,6 @@ namespace mze9412.SEScripts.InventoryManager.Actions
             return true;
         }
 
-        /**End copy here**/
     }
+    /**End copy here**/
 }

@@ -31,7 +31,7 @@ namespace mze9412.ScriptCompiler.Helpers
         }
 
 
-        public class Parser
+        public class Parser : IDisposable
         {
             static readonly List<ParseRule> rules;
 
@@ -150,7 +150,7 @@ namespace mze9412.ScriptCompiler.Helpers
 
             public Dictionary<string, bool> Options = new Dictionary<string, bool>();
 
-            StreamReader readMe;
+            string[] content;
 
             bool makeCompact;
 
@@ -163,7 +163,7 @@ namespace mze9412.ScriptCompiler.Helpers
             public Parser(string fileName, bool makeCompact, int lineThreshold = -1, bool first = false)
             {
                 this.fileName = fileName;
-                this.readMe = new StreamReader(fileName);
+                this.content = File.ReadAllLines(fileName);
                 this.makeCompact = makeCompact;
                 this.lineThreshold = lineThreshold;
                 this.first = first;
@@ -181,9 +181,9 @@ namespace mze9412.ScriptCompiler.Helpers
                     string line;
                     var started = false;
                     var stop = false;
-                    while ((line = readMe.ReadLine()) != null && !stop)
+                    for(int l = 0; l < content.Length && !stop; l++)
                     {
-
+                        line = content[l];
                         if (!started)
                         {
                             if (line.Contains("/**Begin copy here**"))
@@ -235,6 +235,10 @@ namespace mze9412.ScriptCompiler.Helpers
                     Environment.Exit(1);
                 }
                 return null;
+            }
+
+            public void Dispose()
+            {
             }
         }
     }
