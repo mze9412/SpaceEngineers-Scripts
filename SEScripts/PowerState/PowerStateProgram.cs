@@ -158,15 +158,14 @@ namespace mze9412.SEScripts.PowerState
                     totalOutput += s.CurrentOutput;
                 }
                 var percentOutput = totalOutput / maxOutput;
-
                 //write to LCD
                 if (double.IsNaN(percentOutput))
                 {
-                    LCDHelper.WriteLine(DisplayId, "--- No output. Probably night time. ---");
+                    LCDHelper.WriteLine(DisplayId, "--- No output. Probably night time ");
                 }
                 else
                 {
-                    LCDHelper.WriteFormattedLine(DisplayId, "Output:  {0:0.00} / {1:0.00} MW", totalOutput);
+                    LCDHelper.WriteFormattedLine(DisplayId, "Output:  {0:0.00} / {1:0.00} MW", maxOutput, totalOutput);
                     LCDHelper.WriteProgressBar(DisplayId, "Output (%):", percentOutput);
                 }
             }
@@ -177,6 +176,6 @@ namespace mze9412.SEScripts.PowerState
         }
 
         //#include(../Libraries/LCDHelper.cs,false)
+        /**End copy here**/
     }
-    /**End copy here**/
 }

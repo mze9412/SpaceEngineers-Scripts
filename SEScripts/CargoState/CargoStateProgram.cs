@@ -12,7 +12,7 @@ namespace mze9412.SEScripts.CargoState
         /// <summary>
         /// Name of the LCD to print on
         /// </summary>
-        private static string LCDName = "LCD_CargoState";
+        private static string LCDName = "LCD PB2 (CargoState)";
 
         /// <summary>
         /// DO NOT MODIFY
@@ -58,7 +58,7 @@ namespace mze9412.SEScripts.CargoState
             var cargos = new List<IMyTerminalBlock>(10);
             GridTerminalSystem.GetBlocksOfType<IMyTerminalBlock>(cargos, x => x.CubeGrid == Me.CubeGrid && (x is IMyCargoContainer || x is IMyShipConnector));
 
-            LCDHelper.WriteLine(DisplayId, "__Cargo containers / connectors");
+            LCDHelper.WriteLine(DisplayId, "__Cargo containers / connectors__");
             if (cargos.Count > 0)
             {
                 var totalVolume = 0f;
